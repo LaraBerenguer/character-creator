@@ -1,0 +1,17 @@
+[
+    {
+        "id": "1",
+        "title": "Impulsiveness",
+        "description": "Acts without thinking of the consequences."        
+    },
+    {
+        "id": "2",
+        "title": "Arrogance",
+        "description": "Overestimates their abilities."        
+    },
+    {
+        "id": "3",
+        "title": "Secrecy",
+        "description": "Keeps important information to themselves."        
+    }
+]
