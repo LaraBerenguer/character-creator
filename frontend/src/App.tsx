@@ -3,16 +3,17 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import CharacterCreation from './pages/ChatacterCreator';
 import Login from './components/Login';
-import Navbar from './components/Navbar';
+import Layout from './layout/layout';
 
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/creation" element={<CharacterCreation />} />
-        <Route path="/login" element={<Login />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/creation" element={<CharacterCreation />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
       </Routes>
     </>
 
