@@ -1,6 +1,8 @@
+import CharacterCards from "../components/CharacterCards";
+
 const CharacterCreation = () => {
     return (
-        <div>Character Creation</div>
+        <CharacterCards />
     );
 };
 
