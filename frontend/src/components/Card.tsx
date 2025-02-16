@@ -1,82 +1,76 @@
-import { useId, useState } from "react";
+import { useRef, useState } from "react";
 import { IBackgroundType } from "../types/background-type-interface";
 import { IBackground } from "../types/background-interface";
+import { getBackgroundByType, postBackground } from '../services/background-crud';
 
 interface CardProps {
     type: IBackgroundType;
-}
+};
 
 const Card = ({ type }: CardProps) => {
     const [background, setBackground] = useState<IBackground | null>(null);
     const [pinned, setPinned] = useState<boolean>(false);
     const [newBackground, setNewBackground] = useState<Partial<IBackground>>({ title: "", description: "" });
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const uniqueId = useId();
+    const modalRef = useRef<HTMLDialogElement>(null);
 
     const getDataByType = async (type: IBackgroundType) => {
-        const files = {
-            [IBackgroundType.TRAIT]: '/src/api/mockup-data-traits.json',
-            [IBackgroundType.BOND]: '/src/api/mockup-data-bonds.json',
-            [IBackgroundType.FLAW]: '/src/api/mockup-data-flaws.json',
-            [IBackgroundType.IDEAL]: '/src/api/mockup-data-ideals.json'
-        };
-
-        const response = await fetch(files[type]);
-        const data = await response.json();
-        return data[Math.floor(Math.random() * data.length)];
-    }
-
-    const handleClick = async () => {
-        const data = await getDataByType(type);
-        setBackground(data);
-    };
-
-    const handlePin = () => {
-        setPinned(!pinned);
-    };
-
-    const handleAddBackground = () => {
-        const modal = document.getElementById(`modal_${type}`) as HTMLDialogElement;
-        if (modal) {
-            modal.showModal();
-            setIsModalOpen(true);
+        try {
+            const data = await getBackgroundByType(type);
+            return data;
+        } catch (error) {
+            console.log("Error fetching data", error);
+            return null;
         }
     };
 
+    const handleClick = async () => {
+        if (pinned) return;
+        const data = await getDataByType(type);
+        if (data) {
+            setBackground(data);
+        }
+    };
+
+    const handlePin = () => {
+        setPinned(prev => !prev);
+    };
+
+    const handleAddBackground = () => {
+        modalRef.current?.showModal();
+    };
+
     const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setNewBackground({ title: "", description: "" })
+        modalRef.current?.close();
+        setNewBackground({ title: "", description: "" });
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setNewBackground(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setNewBackground(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmitNewBackground = (e: React.FormEvent) => {
+    const handleSubmitNewBackground = async (e: React.FormEvent) => {
         e.preventDefault();
         const createdBackground: IBackground = {
-            id: Number(uniqueId),
+            id: Date.now(),
             type: type,
             title: newBackground.title || "",
             description: newBackground.description || "",
-        }
+        };
 
         try {
+            await postBackground(createdBackground)
             setBackground(createdBackground);
             handleCloseModal();
         } catch (error) {
-            console.log("Error adding new background", error);
-        };
+            console.log("Error adding background", error);
+        }
     };
 
     return (
         <div className="flex flex-col">
-            <a onClick={!pinned ? handleClick : undefined}>
+            <a onClick={handleClick}>
                 <div className="card bg-neutral text-neutral-content w-96">
                     <div className="card-body items-center text-center">
                         <h2 className="card-title">{background ? background.title : '?'}</h2>
@@ -96,7 +90,7 @@ const Card = ({ type }: CardProps) => {
                 </button>
             </div>
             <div className="card-modal">
-                <dialog id={`modal_${type}`} className="modal modal-bottom sm:modal-middle">
+                <dialog ref={modalRef} id={`modal_${type}`} className="modal modal-bottom sm:modal-middle">
                     <div className="modal-box">
                         <h3 className="font-bold text-lg">Add your own {type}</h3>
                         <form onSubmit={handleSubmitNewBackground} className="py-4">
@@ -127,19 +121,12 @@ const Card = ({ type }: CardProps) => {
                             </div>
                             <div className="modal-action">
                                 <button type="submit" className="btn btn-primary">Add</button>
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    onClick={handleCloseModal}
-                                >
+                                <button type="button" className="btn" onClick={handleCloseModal}>
                                     Cancel
                                 </button>
                             </div>
                         </form>
                     </div>
-                    <form method="dialog" className="modal-backdrop">
-                        <button onClick={handleCloseModal}>close</button>
-                    </form>
                 </dialog>
             </div>
         </div>

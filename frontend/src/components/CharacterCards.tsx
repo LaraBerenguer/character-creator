@@ -16,7 +16,6 @@ const CharacterCards = () => {
                 <WideButton buttonText={"Interpret"} />
                 <WideButton buttonText={"Finish character"}/>
             </div>
-
         </div>
     );
 };

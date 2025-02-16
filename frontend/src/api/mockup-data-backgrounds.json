@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "title": "Curiosity",
+        "description": "Always eager to explore the unknown.",
+        "type": "trait"
+    },
+    {
+        "id": 2,
+        "title": "Confidence",
+        "description": "Knows how to command attention and respect.",
+        "type": "trait"
+    },
+    {
+        "id": 3,
+        "title": "Selfless",
+        "description": "Willing to endure hardship for others.",
+        "type": "trait"
+    },
+    {
+        "id": 4,
+        "title": "Mentor",
+        "description": "Deeply connected to a mentor or guide.",
+        "type": "bond"
+    },
+    {
+        "id": 5,
+        "title": "Sibling",
+        "description": "Searching for a lost sibling with mystical ties.",
+        "type": "bond"
+    },
+    {
+        "id": 6,
+        "title": "Beast",
+        "description": "Shares a bond with a mighty and loyal animal.",
+        "type": "bond"
+    },
+    {
+        "id": 7,
+        "title": "Impulsiveness",
+        "description": "Acts without thinking of the consequences.",
+        "type": "flaw"
+    },
+    {
+        "id": 8,
+        "title": "Arrogance",
+        "description": "Overestimates their abilities.",
+        "type": "flaw"
+    },
+    {
+        "id": 9,
+        "title": "Secrecy",
+        "description": "Keeps important information to themselves.",
+        "type": "flaw"
+    },
+    {
+        "id": 10,
+        "title": "Independence",
+        "description": " A free spirit.",
+        "type": "ideal"
+    },
+    {
+        "id": 11,
+        "title": "Family",
+        "description": "Family and loved ones are their top priority.",
+        "type": "ideal"
+    },
+    {
+        "id": 12,
+        "title": "Radical Change",
+        "description": "Destruction is necessary for renewal.",
+        "type": "ideal"
+    }
+]
