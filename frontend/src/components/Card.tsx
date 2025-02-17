@@ -1,32 +1,22 @@
+import { useBackgroundContext } from "../context/BackgroundContext";
 import { useRef, useState } from "react";
 import { IBackgroundType } from "../types/background-type-interface";
 import { IBackground } from "../types/background-interface";
-import { getBackgroundByType, postBackground } from '../services/background-crud';
 
 interface CardProps {
     type: IBackgroundType;
 };
 
 const Card = ({ type }: CardProps) => {
+    const { getRandomBackground, addUserBackground } = useBackgroundContext();
     const [background, setBackground] = useState<IBackground | null>(null);
     const [pinned, setPinned] = useState<boolean>(false);
     const [newBackground, setNewBackground] = useState<Partial<IBackground>>({ title: "", description: "" });
-
-    const modalRef = useRef<HTMLDialogElement>(null);
-
-    const getDataByType = async (type: IBackgroundType) => {
-        try {
-            const data = await getBackgroundByType(type);
-            return data;
-        } catch (error) {
-            console.log("Error fetching data", error);
-            return null;
-        }
-    };
+    const modalRef = useRef<HTMLDialogElement>(null);    
 
     const handleClick = async () => {
         if (pinned) return;
-        const data = await getDataByType(type);
+        const data = await getRandomBackground(type);
         if (data) {
             setBackground(data);
         }
@@ -50,7 +40,7 @@ const Card = ({ type }: CardProps) => {
         setNewBackground(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmitNewBackground = async (e: React.FormEvent) => {
+    const handleSubmitNewBackground = (e: React.FormEvent) => {
         e.preventDefault();
         const createdBackground: IBackground = {
             id: Date.now(),
@@ -60,11 +50,11 @@ const Card = ({ type }: CardProps) => {
         };
 
         try {
-            await postBackground(createdBackground)
+            addUserBackground(createdBackground);
             setBackground(createdBackground);
             handleCloseModal();
         } catch (error) {
-            console.log("Error adding background", error);
+            console.error("Error adding background", error);
         }
     };
 

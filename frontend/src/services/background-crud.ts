@@ -1,28 +1,33 @@
 import { IBackground } from '../types/background-interface';
 import { IBackgroundType } from '../types/background-type-interface';
-import backgrounds from '../api/mockup-data-backgrounds.json';
+import backgroundsData from '../api/mockup-data-backgrounds.json';
 
 //const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
+let myArray: IBackground[] = [];
+
 //get
-export const getBackgroundByType = async (type: IBackgroundType) => {
+export const getBackgroundsByType = (type: IBackgroundType) => {
+
+    if (myArray.length == 0) {
+        myArray = backgroundsData.map(bg => ({ ...bg, type: bg.type as IBackgroundType })); //string to enum
+    }
+
     try {
-        const filteredData = backgrounds
-        .filter(bg => bg.type.toLowerCase() === type.toLowerCase())
-        .map(bg => ({...bg, type: type})); //string to enum
-        return filteredData[Math.floor(Math.random() * filteredData.length)];
+        return myArray.filter(bg => bg.type.toLowerCase() === type.toLowerCase());        
     } catch (error) {
-        console.log("Error fetching data", error);
+        console.error("Error fetching data", error);
         return null;
     }
 };
 
 //post
-export const postBackground = async (bgData: IBackground) => {
+export const addBackground = async (bgData: IBackground) => {
     //call POST in the future
     try {
-        backgrounds.push(bgData);
-        console.log('Updated backgrounds:', backgrounds);
+        myArray.push(bgData);
+        console.log('Updated backgrounds:', bgData);
+        return true;
     } catch (error) {
         console.error("Error updating JSON:", error);
         return false;
