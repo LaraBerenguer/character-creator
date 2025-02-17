@@ -1,9 +1,11 @@
 interface WideButtonProps {
-    buttonText: string;}
+    buttonText: string;
+    onClick?: () => void;
+}
 
-const WideButton = ({ buttonText }: WideButtonProps) => {
+const WideButton = ({ buttonText, onClick }: WideButtonProps) => {
     return (
-        <button className="btn btn-block">{buttonText}</button>
+        <button className="btn btn-block" onClick={onClick}>{buttonText}</button>
     );
 };
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { IBackground } from '../types/background-interface';
 import { IBackgroundType } from '../types/background-type-interface';
 import { getBackgroundsByType, addBackground } from '../services/background-crud';
@@ -9,13 +9,28 @@ interface BackgroundContextProps {
     getRandomBackground: (type: IBackgroundType) => Promise<IBackground>;
     getByType: (type: IBackgroundType) => Promise<IBackground[]>;
     addUserBackground: (bgData: IBackground) => void;
+    getRandomAll: () => Promise<void>;
+    togglePinned: (type: IBackgroundType) => void;
+    currentBackgrounds: Record<IBackgroundType, IBackground | null>;
+    pinnedBackgrounds: Record<IBackgroundType, boolean>;
 };
 
 const BackgroundContext = createContext<BackgroundContextProps | undefined>(undefined);
 
 export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-    //const [backgrounds, setBackgrounds] = useState<IBackground[]>([]);    
+    const [currentBackgrounds, setCurrentBackgrounds] = useState<Record<IBackgroundType, IBackground | null>>({
+        [IBackgroundType.TRAIT]: null,
+        [IBackgroundType.BOND]: null,
+        [IBackgroundType.FLAW]: null,
+        [IBackgroundType.IDEAL]: null
+    });
+    const [pinnedBackgrounds, setPinnedBackgrounds] = useState<Record<IBackgroundType, boolean>>({
+        [IBackgroundType.TRAIT]: false,
+        [IBackgroundType.BOND]: false,
+        [IBackgroundType.FLAW]: false,
+        [IBackgroundType.IDEAL]: false
+    });
 
     const getRandomBackground = async (type: IBackgroundType): Promise<IBackground> => {
         const filteredBackgrounds = getBackgroundsByType(type);
@@ -40,6 +55,30 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         }
     };
 
+    const getRandomAll = async () => {
+        const types = Object.values(IBackgroundType).filter(type => !pinnedBackgrounds[type]);
+        console.log("types:", types);
+
+        const results = await Promise.all(
+            types.map(type => getRandomBackground(type))
+        );
+        console.log("results:", results);
+
+        setCurrentBackgrounds(prev => {
+            const newState = { ...prev };
+
+            types.forEach((type, index) => { newState[type] = results[index]; });
+            return newState;
+        });
+    };
+
+    const togglePinned = (type: IBackgroundType) => {
+        setPinnedBackgrounds(prev => {
+            const newPinnedState = !prev[type];
+            return { ...prev, [type]: newPinnedState };
+        });
+    };
+
     const addUserBackground = async (bgData: IBackground) => {
         //call POST in the future
         try {
@@ -55,7 +94,11 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         getRandomBackground,
         getByType,
         addUserBackground,
-    }), []);
+        getRandomAll,
+        togglePinned,
+        currentBackgrounds,
+        pinnedBackgrounds
+    }), [currentBackgrounds, pinnedBackgrounds]);
 
     return (
         <BackgroundContext.Provider value={value}>

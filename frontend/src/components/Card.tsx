@@ -1,5 +1,5 @@
 import { useBackgroundContext } from "../context/BackgroundContext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IBackgroundType } from "../types/background-type-interface";
 import { IBackground } from "../types/background-interface";
 
@@ -8,22 +8,27 @@ interface CardProps {
 };
 
 const Card = ({ type }: CardProps) => {
-    const { getRandomBackground, addUserBackground } = useBackgroundContext();
+    const { getRandomBackground, addUserBackground, togglePinned, currentBackgrounds, pinnedBackgrounds } = useBackgroundContext();
     const [background, setBackground] = useState<IBackground | null>(null);
-    const [pinned, setPinned] = useState<boolean>(false);
     const [newBackground, setNewBackground] = useState<Partial<IBackground>>({ title: "", description: "" });
-    const modalRef = useRef<HTMLDialogElement>(null);    
+    const modalRef = useRef<HTMLDialogElement>(null);
 
     const handleClick = async () => {
-        if (pinned) return;
+        if (pinnedBackgrounds[type]) {return};
         const data = await getRandomBackground(type);
         if (data) {
             setBackground(data);
         }
     };
 
+    useEffect(() => {
+        if (currentBackgrounds[type]) {
+            setBackground(currentBackgrounds[type]);
+        }
+    }, [currentBackgrounds, type]);
+
     const handlePin = () => {
-        setPinned(prev => !prev);
+        togglePinned(type);
     };
 
     const handleAddBackground = () => {
@@ -69,8 +74,8 @@ const Card = ({ type }: CardProps) => {
                 </div>
             </a>
             <div className="card-buttons">
-                <button className="btn pin text-xs" onClick={handlePin}>
-                    Pin
+                <button className={`btn pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
+                    {pinnedBackgrounds[type] ? "Unpin" : "Pin"}
                 </button>
                 <button className="btn addBackground text-xs" onClick={handleAddBackground}>
                     Add Background
