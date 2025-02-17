@@ -73,7 +73,7 @@ const Card = ({ type }: CardProps) => {
                     </div>
                 </div>
             </a>
-            <div className="card-buttons">
+            <div className="card-buttons flex gap-2 justify-center">
                 <button className={`btn pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
                     {pinnedBackgrounds[type] ? "Unpin" : "Pin"}
                 </button>
