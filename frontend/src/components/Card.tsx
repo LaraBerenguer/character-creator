@@ -51,26 +51,31 @@ const Card = ({ type }: CardProps) => {
     };
 
     return (
-        <div className="flex flex-col">
-            <a onClick={handleClick}>
-                <div className="card bg-neutral text-neutral-content w-96">
-                    <div className="card-body items-center text-center">
-                        <h2 className="card-title">{background ? background.title : '?'}</h2>
-                        <p>{background ? background.description : '???'}</p>
-                    </div>
-                </div>
-            </a>
-            <div className="card-buttons flex gap-2 justify-center">
-                <button className={`btn pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
-                    {pinnedBackgrounds[type] ? "Unpin" : "Pin"}
-                </button>
-                <button className="btn addBackground text-xs" onClick={handleAddBackground}>
-                    Add Background
-                </button>
-                <CollapsedOptions type={type} />
+        <div className="card-elements">
+            <div className="card-title flex justify-center prose my-2">
+                <div className="font-light">{type.toUpperCase()}</div>
             </div>
-            <div className="card-modal">
-                <AddBackgroundModal type={type} isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmitNewBackground} />
+            <div className="flex flex-col">
+                <a onClick={handleClick}>
+                    <div className="card bg-neutral text-neutral-content w-96">
+                        <div className="card-body items-center text-center">
+                            <h2 className="card-title">{background ? background.title : '?'}</h2>
+                            <p>{background ? background.description : '???'}</p>
+                        </div>
+                    </div>
+                </a>
+                <div className="card-buttons flex gap-2 justify-center">
+                    <button className={`btn pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
+                        {pinnedBackgrounds[type] ? "Unpin" : "Pin"}
+                    </button>
+                    <button className="btn addBackground text-xs" onClick={handleAddBackground}>
+                        Add Background
+                    </button>
+                    <CollapsedOptions type={type} />
+                </div>
+                <div className="card-modal">
+                    <AddBackgroundModal type={type} isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmitNewBackground} />
+                </div>
             </div>
         </div>
     );
