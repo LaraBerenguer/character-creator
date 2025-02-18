@@ -11,6 +11,7 @@ interface BackgroundContextProps {
     addUserBackground: (bgData: IBackground) => void;
     getRandomAll: () => Promise<void>;
     togglePinned: (type: IBackgroundType) => void;
+    setOneBackground: (optionBackground: IBackground, type: IBackgroundType) => void;
     currentBackgrounds: Record<IBackgroundType, IBackground | null>;
     pinnedBackgrounds: Record<IBackgroundType, boolean>;
 };
@@ -79,6 +80,10 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         });
     };
 
+    const setOneBackground = (optionBackground: IBackground, type: IBackgroundType) => {
+        setCurrentBackgrounds(prev => ({ ...prev, [type]: optionBackground }));
+    };
+
     const addUserBackground = async (bgData: IBackground) => {
         //call POST in the future
         try {
@@ -96,6 +101,7 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         addUserBackground,
         getRandomAll,
         togglePinned,
+        setOneBackground,
         currentBackgrounds,
         pinnedBackgrounds
     }), [currentBackgrounds, pinnedBackgrounds]);

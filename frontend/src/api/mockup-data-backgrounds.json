@@ -18,22 +18,22 @@
         "type": "trait"
     },
     {
-        "id": 4,
-        "title": "Mentor",
-        "description": "Deeply connected to a mentor or guide.",
-        "type": "bond"
+        "id": 13,
+        "title": "Charm",
+        "description": "Easily forges deep connections.",
+        "type": "trait"
     },
     {
-        "id": 5,
-        "title": "Sibling",
-        "description": "Searching for a lost sibling with mystical ties.",
-        "type": "bond"
+        "id": 14,
+        "title": "Determination",
+        "description": "Unstoppable when pursuing goals.",
+        "type": "trait"
     },
     {
-        "id": 6,
-        "title": "Beast",
-        "description": "Shares a bond with a mighty and loyal animal.",
-        "type": "bond"
+        "id": 15,
+        "title": "Fairness",
+        "description": "Always strives to do what is right.",
+        "type": "trait"
     },
     {
         "id": 7,
@@ -54,9 +54,63 @@
         "type": "flaw"
     },
     {
+        "id": 16,
+        "title": "Overbearing",
+        "description": "Suffocates others with excessive care.",
+        "type": "flaw"
+    },
+    {
+        "id": 17,
+        "title": "Rigid",
+        "description": "Unwilling to adapt or accept change.",
+        "type": "flaw"
+    },
+    {
+        "id": 18,
+        "title": "Dogmatic",
+        "description": "Clings too tightly to outdated traditions.",
+        "type": "flaw"
+    },
+    {
+        "id": 4,
+        "title": "Mentor",
+        "description": "Deeply connected to a mentor or guide.",
+        "type": "bond"
+    },
+    {
+        "id": 5,
+        "title": "Sibling",
+        "description": "Searching for a lost sibling with mystical ties.",
+        "type": "bond"
+    },
+    {
+        "id": 6,
+        "title": "Beast",
+        "description": "Shares a bond with a mighty and loyal animal.",
+        "type": "bond"
+    },
+    {
+        "id": 19,
+        "title": "Artifact",
+        "description": "Bound to a magical artifact of great power.",
+        "type": "bond"
+    },
+    {
+        "id": 20,
+        "title": "Pet",
+        "description": "Fiercely loyal to a magical creature or animal.",
+        "type": "bond"
+    },
+    {
+        "id": 21,
+        "title": "Throne",
+        "description": "Feels bound to a seat of power or authority.",
+        "type": "bond"
+    },
+    {
         "id": 10,
         "title": "Independence",
-        "description": " A free spirit.",
+        "description": "A free spirit.",
         "type": "ideal"
     },
     {
@@ -69,6 +123,24 @@
         "id": 12,
         "title": "Radical Change",
         "description": "Destruction is necessary for renewal.",
+        "type": "ideal"
+    },
+    {
+        "id": 22,
+        "title": "Power",
+        "description": "Knowledge and mastery are keys to greatness.",
+        "type": "ideal"
+    },
+    {
+        "id": 23,
+        "title": "Wisdom",
+        "description": "Reflecting and seeking hidden truths is their duty.",
+        "type": "ideal"
+    },
+    {
+        "id": 24,
+        "title": "Responsibility",
+        "description": "Must maintain order and protect those under their care.",
         "type": "ideal"
     }
 ]

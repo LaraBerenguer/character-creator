@@ -2,6 +2,7 @@ import { useBackgroundContext } from "../context/BackgroundContext";
 import { useEffect, useRef, useState } from "react";
 import { IBackgroundType } from "../types/background-type-interface";
 import { IBackground } from "../types/background-interface";
+import CollapsedOptions from "./CollapsedOptions";
 
 interface CardProps {
     type: IBackgroundType;
@@ -14,7 +15,7 @@ const Card = ({ type }: CardProps) => {
     const modalRef = useRef<HTMLDialogElement>(null);
 
     const handleClick = async () => {
-        if (pinnedBackgrounds[type]) {return};
+        if (pinnedBackgrounds[type]) { return };
         const data = await getRandomBackground(type);
         if (data) {
             setBackground(data);
@@ -80,9 +81,7 @@ const Card = ({ type }: CardProps) => {
                 <button className="btn addBackground text-xs" onClick={handleAddBackground}>
                     Add Background
                 </button>
-                <button className="btn showAll text-xs">
-                    Show options
-                </button>
+                <CollapsedOptions type={type}/>
             </div>
             <div className="card-modal">
                 <dialog ref={modalRef} id={`modal_${type}`} className="modal modal-bottom sm:modal-middle">
