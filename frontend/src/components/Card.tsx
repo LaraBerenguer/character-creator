@@ -1,8 +1,9 @@
 import { useBackgroundContext } from "../context/BackgroundContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IBackgroundType } from "../types/background-type-interface";
 import { IBackground } from "../types/background-interface";
 import CollapsedOptions from "./CollapsedOptions";
+import AddBackgroundModal from "./AddBackgroundModal";
 
 interface CardProps {
     type: IBackgroundType;
@@ -11,8 +12,13 @@ interface CardProps {
 const Card = ({ type }: CardProps) => {
     const { getRandomBackground, addUserBackground, togglePinned, currentBackgrounds, pinnedBackgrounds } = useBackgroundContext();
     const [background, setBackground] = useState<IBackground | null>(null);
-    const [newBackground, setNewBackground] = useState<Partial<IBackground>>({ title: "", description: "" });
-    const modalRef = useRef<HTMLDialogElement>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (currentBackgrounds[type]) {
+            setBackground(currentBackgrounds[type]);
+        }
+    }, [currentBackgrounds, type]);
 
     const handleClick = async () => {
         if (pinnedBackgrounds[type]) { return };
@@ -22,39 +28,7 @@ const Card = ({ type }: CardProps) => {
         }
     };
 
-    useEffect(() => {
-        if (currentBackgrounds[type]) {
-            setBackground(currentBackgrounds[type]);
-        }
-    }, [currentBackgrounds, type]);
-
-    const handlePin = () => {
-        togglePinned(type);
-    };
-
-    const handleAddBackground = () => {
-        modalRef.current?.showModal();
-    };
-
-    const handleCloseModal = () => {
-        modalRef.current?.close();
-        setNewBackground({ title: "", description: "" });
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setNewBackground(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmitNewBackground = (e: React.FormEvent) => {
-        e.preventDefault();
-        const createdBackground: IBackground = {
-            id: Date.now(),
-            type: type,
-            title: newBackground.title || "",
-            description: newBackground.description || "",
-        };
-
+    const handleSubmitNewBackground = (createdBackground: IBackground) => {
         try {
             addUserBackground(createdBackground);
             setBackground(createdBackground);
@@ -62,6 +36,18 @@ const Card = ({ type }: CardProps) => {
         } catch (error) {
             console.error("Error adding background", error);
         }
+    };
+
+    const handlePin = () => {
+        togglePinned(type);
+    };
+
+    const handleAddBackground = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -81,47 +67,10 @@ const Card = ({ type }: CardProps) => {
                 <button className="btn addBackground text-xs" onClick={handleAddBackground}>
                     Add Background
                 </button>
-                <CollapsedOptions type={type}/>
+                <CollapsedOptions type={type} />
             </div>
             <div className="card-modal">
-                <dialog ref={modalRef} id={`modal_${type}`} className="modal modal-bottom sm:modal-middle">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">Add your own {type}</h3>
-                        <form onSubmit={handleSubmitNewBackground} className="py-4">
-                            <div className="form-control w-full">
-                                <label className="label">
-                                    <span className="label-text">Title</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={newBackground.title}
-                                    onChange={handleInputChange}
-                                    className="input input-bordered w-full"
-                                    required
-                                />
-                            </div>
-                            <div className="form-control w-full">
-                                <label className="label">
-                                    <span className="label-text">Description</span>
-                                </label>
-                                <textarea
-                                    name="description"
-                                    value={newBackground.description}
-                                    onChange={handleInputChange}
-                                    className="textarea textarea-bordered h-24"
-                                    required
-                                />
-                            </div>
-                            <div className="modal-action">
-                                <button type="submit" className="btn btn-primary">Add</button>
-                                <button type="button" className="btn" onClick={handleCloseModal}>
-                                    Cancel
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </dialog>
+                <AddBackgroundModal type={type} isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmitNewBackground} />
             </div>
         </div>
     );
