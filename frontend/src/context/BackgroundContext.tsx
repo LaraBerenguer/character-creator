@@ -16,7 +16,7 @@ interface BackgroundContextProps {
     pinnedBackgrounds: Record<IBackgroundType, boolean>;
 };
 
-const BackgroundContext = createContext<BackgroundContextProps | undefined>(undefined);
+export const BackgroundContext = createContext<BackgroundContextProps | undefined>(undefined);
 
 export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
