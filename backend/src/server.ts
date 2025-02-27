@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { connectDB } from './database/connection';
 
 class Server {
     private readonly app: express.Application;
@@ -15,7 +16,7 @@ class Server {
     async init() {
         //this.middlewares();
         this.routes();
-        //await this.dbConnect();
+        await connectDB();        
         //this.seedDatabase(); para datos de base
         
     };
@@ -28,3 +29,5 @@ class Server {
         });        
     }
 };
+
+export default Server;
