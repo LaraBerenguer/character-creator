@@ -8,12 +8,13 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || "3001";
         //this.middlewares();
-        //this.routes();        
+        this.routes();    
+        this.init();    
     };
 
     async init() {
         //this.middlewares();
-        //this.routes();
+        this.routes();
         //await this.dbConnect();
         //this.seedDatabase(); para datos de base
         
