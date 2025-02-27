@@ -1,4 +1,7 @@
 import { Sequelize } from 'sequelize';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const sequelize = new Sequelize({
     database: process.env.DB_NAME || 'character_db',
@@ -7,7 +10,7 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST || 'localhost',
     port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
-    logging: false
+    logging: console.log
 });
 
 export const connectDB = async () => {
@@ -16,6 +19,7 @@ export const connectDB = async () => {
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
+        process.exit(1);
     };
 };
 
