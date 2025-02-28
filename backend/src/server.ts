@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import { connectDB } from './database/connection';
+import cors from 'cors';
+import backgroundRoutes from './routes/backgrounds';
 
 class Server {
     private readonly app: express.Application;
@@ -8,26 +10,39 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || "3001";
-        //this.middlewares();
-        this.routes();    
-        this.init();    
+        this.middlewares();
+        this.routes();
+        this.init();
     };
 
     async init() {
-        //this.middlewares();
+        this.middlewares();
         this.routes();
-        await connectDB();        
+        await connectDB();
         //this.seedDatabase(); para datos de base
-        
+
+    };
+
+    private middlewares() {
+        //print backend petitions     
+        this.app.use((req, res, next) => {
+            console.log(`Request recived: ${req.method} ${req.url}`);
+            next();
+        });
+
+        this.app.use(cors());
+        this.app.use(express.json());
     };
 
     routes() {
-        this.app.get('/', (req: Request, res: Response) => {
-            res.json({
-                msg: "Api working"
-            })
-        });        
-    }
+        this.app.use('/api/backgrounds', backgroundRoutes);
+    };
+
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`Server running on port ${this.port}`);
+        });
+    };
 };
 
 export default Server;
