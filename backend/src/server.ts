@@ -23,6 +23,16 @@ class Server {
 
     };
 
+    routes() {
+        this.app.use('/api/backgrounds', backgroundRoutes);
+    };
+
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`Server running on port ${this.port}`);
+        });
+    };
+
     private middlewares() {
         //print backend petitions     
         this.app.use((req, res, next) => {
@@ -32,16 +42,6 @@ class Server {
 
         this.app.use(cors());
         this.app.use(express.json());
-    };
-
-    routes() {
-        this.app.use('/api/backgrounds', backgroundRoutes);
-    };
-
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Server running on port ${this.port}`);
-        });
     };
 };
 
