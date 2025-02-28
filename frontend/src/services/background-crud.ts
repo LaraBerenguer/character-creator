@@ -1,35 +1,50 @@
 import { IBackground } from '../types/background-interface';
 import { IBackgroundType } from '../types/background-type-interface';
-import backgroundsData from '../api/mockup-data-backgrounds.json';
 
-//const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
-
-let myArray: IBackground[] = [];
+const BACK_URL = import.meta.env.VITE_API_URL_BACK || "http://localhost:3001";
 
 //get
-export const getBackgroundsByType = (type: IBackgroundType) => {
-
-    if (myArray.length == 0) {
-        myArray = backgroundsData.map(bg => ({ ...bg, type: bg.type as IBackgroundType })); //string to enum
-    }
-
+export const getBackgroundsByType = async (type: IBackgroundType) => {
     try {
-        return myArray.filter(bg => bg.type.toLowerCase() === type.toLowerCase());        
+        const response = await fetch(`${BACK_URL}/api/backgrounds?type=${type}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        const data = response.json();
+        return data;
+
     } catch (error) {
-        console.error("Error fetching data", error);
-        return null;
-    }
+        console.error('Error fetching backgrounds', error);
+        // TO DO redirect 500
+    };
 };
 
 //post
 export const addBackground = async (bgData: IBackground) => {
-    //call POST in the future
     try {
-        myArray.push(bgData);
-        console.log('Updated backgrounds:', bgData);
-        return true;
+        const response = await fetch(`${BACK_URL}/api/backgrounds`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bgData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        return response.json();
+
     } catch (error) {
-        console.error("Error updating JSON:", error);
-        return false;
-    }
+        console.error('Error fetching backgrounds', error);
+        // TO DO redirect 500
+    };
 };
