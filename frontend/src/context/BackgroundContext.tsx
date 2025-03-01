@@ -34,26 +34,21 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
 
     const getRandomBackground = async (type: IBackgroundType): Promise<IBackground> => {
-        const filteredBackgrounds = getBackgroundsByType(type);
+        const filteredBackgrounds = await getBackgroundsByType(type);
         if (filteredBackgrounds === null || filteredBackgrounds.length === 0) {
             throw new Error('Array should not be null');
         } else {
             return filteredBackgrounds[Math.floor(Math.random() * filteredBackgrounds.length)];
-        }
+        };
     };
 
     const getByType = async (type: IBackgroundType): Promise<IBackground[]> => {
-        try {
-            const backgroundsByType = getBackgroundsByType(type);
-            if (backgroundsByType === null) {
-                throw new Error('Array should not be null');
-            } else {
-                return backgroundsByType;
-            }
-        } catch (error) {
-            console.error("Error fetching data", error);
-            return [];
-        }
+        const backgroundsByType = await getBackgroundsByType(type);
+        if (backgroundsByType === null) {
+            throw new Error('Array should not be null');
+        } else {
+            return backgroundsByType;
+        };
     };
 
     const getRandomAll = async () => {
@@ -67,7 +62,6 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
         setCurrentBackgrounds(prev => {
             const newState = { ...prev };
-
             types.forEach((type, index) => { newState[type] = results[index]; });
             return newState;
         });
@@ -85,14 +79,8 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     const addUserBackground = async (bgData: IBackground) => {
-        //call POST in the future
-        try {
-            addBackground(bgData);
-            console.log('Updated backgrounds:', bgData);
-        } catch (error) {
-            console.error("Error updating bakcgrounds:", error);
-            return false;
-        }
+        const addedBackground = await addBackground(bgData);
+        console.log('Updated backgrounds:', addedBackground);
     };
 
     const value = useMemo(() => ({

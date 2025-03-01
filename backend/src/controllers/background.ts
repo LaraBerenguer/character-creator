@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import Background from '../models/background';
 
 export const getBackgroundsByType = async (req: Request, res: Response) => {
-    const { type } = req.params;
-    const backgroundsByType = await Background.findByPk(type);
+    const type = req.params.type;
+    const backgrounds = await Background.findAll({type});
 
-    if (backgroundsByType) {
-        res.json(backgroundsByType);
+    if (backgrounds) {
+        res.json(backgrounds);
     } else {
         res.status(404).json({
             msg: `No backgrounds with type ${type}`
