@@ -1,7 +1,7 @@
 import WideButton from "../components/Buttons/WideButton";
 import Card from "../components/Card";
 import { useBackgroundContext } from "../context/BackgroundContext";
-import { IBackgroundType } from "../types/background-type-interface";
+import { IBackgroundType } from "../../../common/types/background-type-interface";
 
 const CharacterCards = () => {
 

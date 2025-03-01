@@ -1,5 +1,5 @@
-import { IBackground } from '../types/background-interface';
-import { ICharacter } from '../types/character-interface';
+import { IBackground } from '../../../common/types/background-interface';
+import { ICharacter } from '../../../common/types/character-interface';
 
 class Character {
     id?: number;

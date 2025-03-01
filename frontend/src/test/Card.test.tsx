@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Card from '../components/Card';
 import { BackgroundContext } from '../context/BackgroundContext';
-import { IBackgroundType } from '../types/background-type-interface';
+import { IBackgroundType } from '../../../common/types/background-type-interface';
 
 /*const mockBackground = {
     id: '1',

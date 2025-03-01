@@ -1,5 +1,5 @@
-import { IBackground } from '../types/background-interface';
-import { IBackgroundType } from '../types/background-type-interface';
+import { IBackground } from '../../../common/types/background-interface';
+import { IBackgroundType } from '../../../common/types/background-type-interface';
 
 const BACK_URL = import.meta.env.VITE_API_URL_BACK || "http://localhost:3001";
 

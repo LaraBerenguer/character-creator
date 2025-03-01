@@ -1,4 +1,4 @@
-import { IBackground } from '../types/background-interface';
+import { IBackground } from './background-interface';
 
 export interface ICharacter {
     id?: number,

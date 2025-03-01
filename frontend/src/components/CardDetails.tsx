@@ -1,4 +1,4 @@
-import { IBackground } from "../types/background-interface";
+import { IBackground } from "../../../common/types/background-interface";
 
 interface CardDetailsProps {
     background: IBackground | null;

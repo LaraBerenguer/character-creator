@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import AddBackgroundModal from '../components/AddBackgroundModal';
-import { IBackgroundType } from '../types/background-type-interface';
+import { IBackgroundType } from '../../../common/types/background-type-interface';
 
 describe('AddBackgroundModal', () => {
     beforeEach(() => {

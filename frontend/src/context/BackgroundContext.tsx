@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { IBackground } from '../types/background-interface';
-import { IBackgroundType } from '../types/background-type-interface';
+import { IBackground } from '../../../common/types/background-interface';
+import { IBackgroundType } from '../../../common/types/background-type-interface';
 import { getBackgroundsByType, addBackground } from '../services/background-crud';
 
 

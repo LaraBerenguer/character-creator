@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "../common/types/bond-interface.ts", "../common/types/flaw-interface.ts", "../common/types/fullCharacter-Interface.ts", "../common/types/ideal-interface.ts", "../common/types/trait-interface.ts"]
+  "include": ["src", "../common/types/bond-interface.ts", "../common/types/flaw-interface.ts", "../common/types/fullCharacter-Interface.ts", "../common/types/ideal-interface.ts", "../common/types/trait-interface.ts", "../common/types/background-interface.ts", "../common/types/background-type-interface.ts", "../common/types/character-interface.ts"]
 }
