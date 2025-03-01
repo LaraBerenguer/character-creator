@@ -2,7 +2,6 @@ import { connectDB } from './database/connection'
 import dotenv from 'dotenv';
 import Server from './server';
 
-//env variables config
 dotenv.config();
 
 console.log("Starting the server...");

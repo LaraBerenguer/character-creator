@@ -5,7 +5,6 @@ import { getBackgroundsByType, addBackground } from '../services/background-crud
 
 
 interface BackgroundContextProps {
-    //backgrounds: IBackground[];
     getRandomBackground: (type: IBackgroundType) => Promise<IBackground>;
     getByType: (type: IBackgroundType) => Promise<IBackground[]>;
     addUserBackground: (bgData: IBackground) => void;

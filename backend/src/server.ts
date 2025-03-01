@@ -20,7 +20,6 @@ class Server {
         this.routes();
         await connectDB();
         //this.seedDatabase(); para datos de base
-
     };
 
     routes() {

@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-const sequelize = new Sequelize('sqlite::memory:');
+import sequelize from '../database/connection';
 
 const Background = sequelize.define(
     'Background',
