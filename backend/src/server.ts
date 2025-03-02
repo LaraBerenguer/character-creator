@@ -3,6 +3,8 @@ import { connectDB } from './database/connection';
 import seedDatabase from './database/seed/seed';
 import cors from 'cors';
 import backgroundRoutes from './routes/backgrounds';
+import loginRoutes from './routes/login';
+import registerRoutes from './routes/register';
 
 class Server {
     private readonly app: express.Application;
@@ -43,6 +45,9 @@ class Server {
 
     routes() {
         this.app.use('/api/backgrounds', backgroundRoutes);
+        this.app.use('/api/register', registerRoutes);
+        this.app.use('/api/login', loginRoutes);
+        
     };
 
     listen() {
