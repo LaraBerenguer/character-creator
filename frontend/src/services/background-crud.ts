@@ -17,8 +17,7 @@ export const getBackgroundsByType = async (type: IBackgroundType) => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         };
 
-        const data = response.json();
-        console.log("vamos a ver qué data sale:", data);
+        const data = response.json();        
         return data;
 
     } catch (error) {

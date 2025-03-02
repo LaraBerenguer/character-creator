@@ -1,3 +1,5 @@
+--sql for Postresql in case you need the data
+
 DROP TABLE IF EXISTS backgrounds;
 
 CREATE TABLE backgrounds (

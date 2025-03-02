@@ -14,14 +14,12 @@ const sequelize = new Sequelize({
 });
 
 export const connectDB = async () => {
-    try {
-        console.log('Connecting to the database...');
+    try {        
         await sequelize.authenticate();
         console.log('Connection to db has been established successfully.');
         //DEVELOPMENT ONLY
         const isDevelopment = process.env.ENVIRONMENT?.toLowerCase() === 'development';
         if (isDevelopment) {
-            console.log('Syncing database...');
             await sequelize.sync();
             console.log('Database synced');                        
         };

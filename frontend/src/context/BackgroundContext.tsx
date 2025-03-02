@@ -13,6 +13,7 @@ interface BackgroundContextProps {
     setOneBackground: (optionBackground: IBackground, type: IBackgroundType) => void;
     currentBackgrounds: Record<IBackgroundType, IBackground | null>;
     pinnedBackgrounds: Record<IBackgroundType, boolean>;
+    refreshBackgrounds: Number;
 };
 
 export const BackgroundContext = createContext<BackgroundContextProps | undefined>(undefined);
@@ -31,6 +32,8 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         [IBackgroundType.FLAW]: false,
         [IBackgroundType.IDEAL]: false
     });
+
+    const [refreshBackgrounds, setRefreshBackgrounds] = useState(0);
 
     const getRandomBackground = async (type: IBackgroundType): Promise<IBackground> => {
         const filteredBackgrounds = await getBackgroundsByType(type);
@@ -51,13 +54,11 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     const getRandomAll = async () => {
-        const types = Object.values(IBackgroundType).filter(type => !pinnedBackgrounds[type]);
-        console.log("types:", types);
+        const types = Object.values(IBackgroundType).filter(type => !pinnedBackgrounds[type]);        
 
         const results = await Promise.all(
             types.map(type => getRandomBackground(type))
-        );
-        console.log("results:", results);
+        );       
 
         setCurrentBackgrounds(prev => {
             const newState = { ...prev };
@@ -80,6 +81,7 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const addUserBackground = async (bgData: IBackground) => {
         const addedBackground = await addBackground(bgData);
         console.log('Updated backgrounds:', addedBackground);
+        setRefreshBackgrounds(prev => prev + 1);
     };
 
     const value = useMemo(() => ({
@@ -90,8 +92,9 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         togglePinned,
         setOneBackground,
         currentBackgrounds,
-        pinnedBackgrounds
-    }), [currentBackgrounds, pinnedBackgrounds]);
+        pinnedBackgrounds,
+        refreshBackgrounds
+    }), [currentBackgrounds, pinnedBackgrounds, refreshBackgrounds]);
 
     return (
         <BackgroundContext.Provider value={value}>

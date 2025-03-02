@@ -9,7 +9,7 @@ interface CollapsedOptionsProps {
 
 const CollapsedOptions = ({ type }: CollapsedOptionsProps) => {
 
-    const { getByType, setOneBackground, currentBackgrounds } = useBackgroundContext();
+    const { getByType, setOneBackground, refreshBackgrounds, currentBackgrounds } = useBackgroundContext();
     const [options, setOptions] = useState<IBackground[]>([]);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const CollapsedOptions = ({ type }: CollapsedOptionsProps) => {
         };
 
         fetchOptions();
-    }, [type, getByType]);
+    }, [type, getByType, refreshBackgrounds]);
 
     const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedId = Number(e.target.value);

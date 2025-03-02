@@ -28,8 +28,7 @@ const AddBackgroundModal = ({ type, isOpen, onClose, onSubmit }: AddBackgroundMo
 
     const handleSubmitNewBackground = (e: React.FormEvent) => {
         e.preventDefault();
-        const createdBackground: IBackground = {
-            id: Date.now(),
+        const createdBackground: IBackground = {            
             type: type,
             title: newBackground.title || "",
             description: newBackground.description || "",

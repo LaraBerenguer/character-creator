@@ -15,15 +15,9 @@ class Server {
 
     async init() {
         try {
-            console.log('Initializing middlewares...');
+
             this.middlewares();
-            console.log('Middlewares initialized.');
-
-            console.log('Setting up routes...');
             this.routes();
-            console.log('Routes set up.');           
-
-            console.log('Initializing server...');
             await connectDB();
             console.log('Database connected');
             console.log('Running seedDatabase...');
