@@ -18,11 +18,12 @@ export const connectDB = async () => {
         console.log('Connecting to the database...');
         await sequelize.authenticate();
         console.log('Connection to db has been established successfully.');
+        //DEVELOPMENT ONLY
         const isDevelopment = process.env.ENVIRONMENT?.toLowerCase() === 'development';
         if (isDevelopment) {
             console.log('Syncing database...');
             await sequelize.sync();
-            console.log('Database synced');            
+            console.log('Database synced');                        
         };
     } catch (error) {
         console.error('Unable to connect to the database:', error);
