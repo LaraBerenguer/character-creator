@@ -18,6 +18,7 @@ export const getBackgroundsByType = async (type: IBackgroundType) => {
         };
 
         const data = response.json();
+        console.log("vamos a ver qué data sale:", data);
         return data;
 
     } catch (error) {

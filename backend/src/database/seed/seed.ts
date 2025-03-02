@@ -11,17 +11,21 @@ const seedDatabase = async () => {
 
         if (count > 0) {
             console.log(`Database already contains ${count} backgrounds`);
-        } else console.log('No backgrounds found. Seeding new data...');
-        // Convert and insert seed data
-        console.log(`Preparing ${backgroundSeed.length} records for insertion`);
-        const seedData = backgroundSeed.map(bg => ({
-            title: bg.title,
-            description: bg.description,
-            type: bg.type
-        }));
-        console.log('Executing bulk create...');
-        await Background.bulkCreate(seedData);
-        console.log(`Successfully seeded ${seedData.length} backgrounds`);
+        } else {
+            console.log('No backgrounds found. Seeding new data...');
+
+            // Convert and insert seed data
+            console.log(`Preparing ${backgroundSeed.length} records for insertion`);
+            const seedData = backgroundSeed.map(bg => ({
+                title: bg.title,
+                description: bg.description,
+                type: bg.type
+            }));
+            console.log('Executing bulk create...');
+            await Background.bulkCreate(seedData);
+            console.log(`Successfully seeded ${seedData.length} backgrounds`);
+        };
+
     } catch (error) {
         console.error('Error checking seed data:', error);
         throw error;

@@ -5,7 +5,7 @@ import { IBackground } from "../../../common/types/background-interface";
 
 interface CollapsedOptionsProps {
     type: IBackgroundType;
-}
+};
 
 const CollapsedOptions = ({ type }: CollapsedOptionsProps) => {
 
