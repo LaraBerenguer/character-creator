@@ -1,5 +1,25 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+
+//validation form
+const loginInputSchema = z.object({
+    email: z.string().email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters")
+});
+
+const tokenResponseSchema = z.object({
+    access_token: z.string()
+});
+
+const userSchema = z.object({
+    id: z.number(),
+    email: z.string().email(),
+    username: z.string()
+});
+
+type User = z.infer<typeof userSchema>;
+//type LoginInput = z.infer<typeof loginInputSchema>;
 
 interface AuthContextProps {
     user: User | null;
@@ -7,12 +27,6 @@ interface AuthContextProps {
     error: string | null;
     login: (email: string, password: string) => Promise<void>
     logout: () => void;
-};
-
-interface User { //import from common/backend
-    id: number;
-    email: string;
-    username: string;
 };
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -26,10 +40,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const navigate = useNavigate();
 
     useEffect(() => {
-        //check token from local storage
-        //validate token (how???)
-        //setUser with token data
-
         const checkAuth = async () => {
             const token = localStorage.getItem('token');
 
@@ -44,22 +54,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const userData = await response.json();
                 if (!response.ok) throw new Error(userData.error || 'Invalid token');
 
+                const validatedUser = userSchema.safeParse(userData);
+                if (!validatedUser.success) {
+                    throw new Error("Invalid user data format");
+                };
+
                 setUser(userData);
                 setLoading(false);
             } catch (error) {
                 console.error('Error validating token:', error);
+                setLoading(false);
                 logout();
             };
         };
 
         checkAuth();
-
-    }, [/*user??? Each time??*/]);
+    }, []);
 
     const login = async (email: string, password: string) => {
         try {
             setLoading(true);
             setError(null);
+
+            //validations
+            const validationResult = loginInputSchema.safeParse({ email, password });
+            if (!validationResult.success) {
+                const errorMessage = validationResult.error.errors
+                    .map(err => err.message)
+                    .join(", ");
+                setError(errorMessage);
+                setLoading(false);
+                return;
+            };
 
             const response = await fetch(`${BACK_URL}/api/login`, {
                 method: 'POST',
@@ -72,8 +98,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || 'Login failed');
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
+            //token validation
+            const tokenValidation = tokenResponseSchema.safeParse(data);
+            if (!tokenValidation.success) {
+                throw new Error("Invalid token format received");
             }
 
             //Get token from localstorage
@@ -89,14 +117,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const userData = await userResponse.json();
             if (!userResponse.ok) throw new Error(userData.error || 'Failed to fetch user');
 
+            //user validation
+            const userValidation = userSchema.safeParse(userData);
+            if (!userValidation.success) {
+                throw new Error("Invalid user data format");
+            }
+
+            const validatedUser = userValidation.data;
+
             localStorage.setItem('user', JSON.stringify(userData));
 
-            setUser(userData);
+            setUser(validatedUser);
             navigate('/');
             setLoading(false);
-
+            return;
         } catch (error) {
             setError(error instanceof Error ? error.message : 'An unknown error occurred');
+            setLoading(false);
         };
     };
 
@@ -120,4 +157,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             {children}
         </AuthContext.Provider>
     );
+};
+
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
 };
