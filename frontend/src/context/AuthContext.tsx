@@ -26,7 +26,7 @@ interface AuthContextProps {
     loading: boolean;
     error: string | null;
     login: (email: string, password: string) => Promise<void>
-    logout: () => void;
+    logout: () => void;    
 };
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);

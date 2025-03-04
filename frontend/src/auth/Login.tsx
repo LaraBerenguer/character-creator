@@ -10,9 +10,9 @@ const Login = () => {
 
     useEffect(() => {
         if (user) {
-          navigate('/');
+            navigate('/');
         }
-      }, [user, navigate]);
+    }, [user, navigate]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -66,7 +66,7 @@ const Login = () => {
                             <span className="block sm:inline">{error}</span>
                         </div>
                     }
-                    <button className="btn btn-primary">{loading ? 'Logging in...' : 'Log In'}</button>
+                    <button className="btn btn-primary" disabled={loading}>{loading ? 'Logging in...' : 'Log In'}</button>
                 </form>
                 <div className="login-navigation text-center text-xs">
                     Don't have an account? <Link className='text-decoration-line: underline' to="/signup">Sign Up</Link>
