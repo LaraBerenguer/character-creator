@@ -5,6 +5,7 @@ import cors from 'cors';
 import backgroundRoutes from './routes/backgrounds';
 import loginRoutes from './routes/login';
 import registerRoutes from './routes/register';
+import usersRoutes from './routes/users';
 
 class Server {
     private readonly app: express.Application;
@@ -47,7 +48,13 @@ class Server {
         this.app.use('/api/backgrounds', backgroundRoutes);
         this.app.use('/api/register', registerRoutes);
         this.app.use('/api/login', loginRoutes);
-        
+        this.app.use('/api', usersRoutes);
+
+        this.app.use((err: any, req: Request, res: Response, next: Function) => {
+            console.error(err);
+            res.status(500).json({ error: "Internal server error" });
+        });
+
     };
 
     listen() {
