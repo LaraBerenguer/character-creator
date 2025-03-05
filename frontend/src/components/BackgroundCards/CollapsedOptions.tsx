@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useBackgroundContext } from "../context/BackgroundContext";
-import { IBackgroundType } from "../../../common/types/background-type-interface";
-import { IBackground } from "../../../common/types/background-interface";
+import { useBackgroundContext } from "../../context/BackgroundContext";
+import { IBackgroundType } from "../../../../common/types/background-type-interface";
+import { IBackground } from "../../../../common/types/background-interface";
 
 interface CollapsedOptionsProps {
     type: IBackgroundType;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { IBackground } from "../../../common/types/background-interface";
-import { IBackgroundType } from "../../../common/types/background-type-interface";
+import { IBackground } from "../../../../common/types/background-interface";
+import { IBackgroundType } from "../../../../common/types/background-type-interface";
 
 interface AddBackgroundModalProps {
     type: IBackgroundType;

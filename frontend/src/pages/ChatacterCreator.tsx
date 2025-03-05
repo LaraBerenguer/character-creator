@@ -1,4 +1,4 @@
-import CharacterCards from "../components/CharacterCards";
+import CharacterCards from "../components/BackgroundCards/CharacterCards";
 
 const CharacterCreation = () => {
     return (

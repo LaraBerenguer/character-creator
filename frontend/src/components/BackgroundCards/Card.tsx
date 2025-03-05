@@ -1,7 +1,7 @@
-import { useBackgroundContext } from "../context/BackgroundContext";
+import { useBackgroundContext } from "../../context/BackgroundContext";
 import { useEffect, useState } from "react";
-import { IBackgroundType } from "../../../common/types/background-type-interface";
-import { IBackground } from "../../../common/types/background-interface";
+import { IBackgroundType } from "../../../../common/types/background-type-interface";
+import { IBackground } from "../../../../common/types/background-interface";
 import CollapsedOptions from "./CollapsedOptions";
 import AddBackgroundModal from "./AddBackgroundModal";
 
