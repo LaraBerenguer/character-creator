@@ -8,12 +8,12 @@ import { AuthProvider } from './context/AuthContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
-      <BackgroundProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <BackgroundProvider>
           <App />
-        </BrowserRouter>
-      </BackgroundProvider>
-    </AuthProvider>
+        </BackgroundProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>
 );

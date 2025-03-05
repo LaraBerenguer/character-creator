@@ -64,7 +64,7 @@ const SignUp = () => {
                     <h1 className="">Sign Up</h1>
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
-                <form onSubmit={handleSignUp}>
+                <form onSubmit={handleSignUp} className='flex flex-col gap-3'>
                     <label className="input input-bordered flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
