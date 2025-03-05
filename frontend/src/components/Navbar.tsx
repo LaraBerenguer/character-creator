@@ -23,6 +23,7 @@ const Navbar = () => {
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                             {user ?
                                 (<>
+                                    <div className="text-center mb-2"><p>Hi, {user.username}</p></div>
                                     <li>
                                         <a className="justify-between">
                                             Profile

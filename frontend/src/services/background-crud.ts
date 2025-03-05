@@ -6,10 +6,12 @@ const BACK_URL = import.meta.env.VITE_API_URL_BACK || "http://localhost:3001";
 //get
 export const getBackgroundsByType = async (type: IBackgroundType) => {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/backgrounds?type=${type}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
             },
         });
 
@@ -17,7 +19,7 @@ export const getBackgroundsByType = async (type: IBackgroundType) => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         };
 
-        const data = response.json();        
+        const data = response.json();
         return data;
 
     } catch (error) {
@@ -29,10 +31,12 @@ export const getBackgroundsByType = async (type: IBackgroundType) => {
 //post
 export const addBackground = async (bgData: IBackground) => {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/backgrounds`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
             },
             body: JSON.stringify(bgData)
         });

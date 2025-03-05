@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import Loading from "../components/Loading/Loading";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const signupSchema = z.object({
     username: z.string().min(3, "Username must be at least 3 characters"),
@@ -104,6 +104,9 @@ const SignUp = () => {
                     </label>
                     <button className="btn btn-primary" disabled={loading}>{loading ? 'Signing up...' : 'Sign Up'}</button>
                 </form>
+                <div className="login-navigation text-center text-xs">
+                    Already have an account? <Link className='text-decoration-line: underline' to="/login">Log In</Link>
+                </div>
             </div>
         </div>
     );
