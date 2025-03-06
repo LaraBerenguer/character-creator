@@ -24,12 +24,7 @@ const Navbar = () => {
                             {user ?
                                 (<>
                                     <div className="text-center mb-2"><p>Hi, {user.username}</p></div>
-                                    <li>
-                                        <a className="justify-between">
-                                            Profile
-                                            <span className="badge">Coming Soon</span>
-                                        </a>
-                                    </li>
+                                    <li><Link to='/dashboard'>Profile</Link></li>
                                     <li><button onClick={logout}>Logout</button></li>
                                 </>
                                 ) : (

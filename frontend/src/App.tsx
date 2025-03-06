@@ -7,6 +7,7 @@ import Login from './auth/Login';
 import Layout from './layout/layout';
 import SignUp from './auth/SignUp';
 import ProtectedRoute from './auth/ProtectedRoutes';
+import UserDashboard from './pages/UserDashboard';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/creation" element={<CharacterCreation />} />
             <Route path="/creation/name" element={<CharacterName />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
           </Route>
         </Route>
       </Routes>
