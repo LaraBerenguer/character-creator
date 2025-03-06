@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { getCharacters, addCharacter, deleteCharacter } from '../services/character-crud';
+import { getCharacters, getCharactersByUserId, addCharacter, deleteCharacter } from '../services/character-crud';
 import { ICharacter } from '../../../common/types/character-interface';
 
 
@@ -34,8 +34,8 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const getUserCharacters = async (userid: number) => {
         setLoading(true);
-        const characters: ICharacter[] = await getCharacters();
-        const userCharacters = characters.filter(character => character.user_id === userid);
+        const userCharacters: ICharacter[] = await getCharactersByUserId(userid);
+        //const userCharacters = characters.filter(character => character.user_id === userid);
 
         if (userCharacters === null || userCharacters.length === 0) {
             setCharacters([]);

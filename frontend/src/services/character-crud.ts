@@ -28,10 +28,10 @@ export const getCharacters = async () => {
 };
 
 //get by id
-export const getCharactersById = async (id: number) => {
+export const getCharactersByUserId = async (id: number) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${BACK_URL}/api/characters/${id}`, {
+        const response = await fetch(`${BACK_URL}/api/backgrounds?user_id=${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
