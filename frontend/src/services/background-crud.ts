@@ -48,7 +48,7 @@ export const addBackground = async (bgData: IBackground) => {
         return response.json();
 
     } catch (error) {
-        console.error('Error fetching backgrounds', error);
+        console.error('Error creating backgrounds', error);
         // TO DO redirect 500
     };
 };
