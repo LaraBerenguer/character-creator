@@ -30,7 +30,7 @@ export const getCharactersById = async (req: Request, res: Response) => {
     };*/
 };
 
-export const createCharatcer = async (req: Request, res: Response) => {
+export const createCharacter = async (req: Request, res: Response) => {
     res.status(200).send("Yes! createCharacter");
 
     /*const { body } = req;
@@ -46,10 +46,17 @@ export const createCharatcer = async (req: Request, res: Response) => {
     }*/
 };
 
-export const deleteCharatcer = async (req: Request, res: Response) => {
-    res.status(200).send("Yes! deleteCharacer");
+export const deleteCharacter = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    console.log(`Yes! deleteCharacer request for id ${id}`);
 
-    /*const { id } = req.params;
+    res.status(200).json({
+        message: `Character ${id} deletion requested successfully`,
+        success: true,
+        deletedId: id
+    });
+
+    /*
     const deletedcharacter = await Character.findByPk(id);
 
     if (!deletedcharacter) {

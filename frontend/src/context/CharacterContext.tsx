@@ -58,10 +58,14 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const removeCharacter = async (characterId: number) => {
         setLoading(true);
-        const deletedCharacter = await deleteCharacter(characterId);
-        setCharacters(prev => prev.filter(character => character.id !== characterId));
-        setLoading(false);
-        console.log('Deleted character:', deletedCharacter);
+        try {
+            const deletedCharacter = await deleteCharacter(characterId);
+            setCharacters(prev => prev.filter(character => character.id !== characterId));
+            setLoading(false);
+            console.log('Deleted character:', deletedCharacter);
+        } catch (error) {
+            console.error('Failed to delete character:', error);
+        };
     };
 
     const value = useMemo(() => ({

@@ -92,8 +92,20 @@ export const deleteCharacter = async (id: number) => {
         if (!response.ok) {
             throw new Error('Error deleting character:')
         }
+        //testing mock
+        if (response.status === 404) {
+            console.log(`Successfully deleted mock character ${id}`);
+            return {
+                message: `Mock deletion success for ID: ${id}`,
+                success: true,
+                deletedId: id
+            };
+        };
 
-        if (response.status === 204) { return null; }
+        if (response.status === 204) {
+            console.log(`Successfully deleted character ${id} (no content response)`);
+            return null
+        };
 
         return await response.json();
 
