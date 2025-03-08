@@ -26,10 +26,10 @@ export const getCharactersById = async (req: Request, res: Response) => {
     };
 };
 
-export const getCharactersByUserId = async (req: Request, res: Response) => {
-    const userId = req.params.user_id as string;
+export const getCharactersByUserId = async (req: Request, res: Response) => {    
+    const userId = req.user_id; //from token   
 
-    const characters = await Character.findAll({ where: { userId } });
+    const characters = await Character.findAll({ where: { user_id: userId } });
 
     if (characters) {
         res.json(characters);
@@ -42,6 +42,9 @@ export const getCharactersByUserId = async (req: Request, res: Response) => {
 
 export const createCharacter = async (req: Request, res: Response) => {
     const { body } = req;
+    const userId = req.user_id;
+
+    body.user_id = userId;
 
     try {
         const characterdb = await Character.create(body);

@@ -5,8 +5,8 @@ import { authentication } from '../controllers/auth';
 const router = Router();
 
 router.get('/', authentication as RequestHandler, getCharacters as RequestHandler);
+router.get('/user', authentication as RequestHandler, getCharactersByUserId as RequestHandler);
 router.get('/:id', authentication as RequestHandler, getCharactersById as RequestHandler);
-router.get('/user/:id', authentication as RequestHandler, getCharactersByUserId as RequestHandler);
 router.post('/', authentication as RequestHandler, createCharacter as RequestHandler);
 router.delete('/:id', authentication as RequestHandler, deleteCharacter as RequestHandler);
 

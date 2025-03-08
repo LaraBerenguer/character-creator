@@ -28,10 +28,10 @@ export const getCharacters = async () => {
 };
 
 //get by id
-export const getCharactersByUserId = async (id: number) => {
+export const getCharactersByUserId = async (/*id: number*/) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${BACK_URL}/api/backgrounds?user_id=${id}`, {
+        const response = await fetch(`${BACK_URL}/api/characters/user`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export const getCharactersByUserId = async (id: number) => {
         return data;
 
     } catch (error) {
-        console.error('Error fetching backgrounds', error);
+        console.error('Error fetching characters', error);
         // TO DO redirect 500
     };
 };

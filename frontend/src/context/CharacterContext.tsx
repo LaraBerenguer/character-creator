@@ -32,10 +32,9 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         };
     };
 
-    const getUserCharacters = async (userid: number) => {
+    const getUserCharacters = async (/*userid: number*/) => {
         setLoading(true);
-        const userCharacters: ICharacter[] = await getCharactersByUserId(userid);
-        //const userCharacters = characters.filter(character => character.user_id === userid);
+        const userCharacters: ICharacter[] = await getCharactersByUserId(/*userid*/);
 
         if (userCharacters === null || userCharacters.length === 0) {
             setCharacters([]);
