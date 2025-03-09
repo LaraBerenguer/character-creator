@@ -28,7 +28,7 @@ export const getCharacters = async () => {
 };
 
 //get by id
-export const getCharactersByUserId = async (/*id: number*/) => {
+export const getCharactersByUserId = async () => {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/characters/user`, {

@@ -8,7 +8,7 @@ export interface ICharacter {
     flaw: IBackground,
     bond: IBackground,
     ideal: IBackground,
-    user_id: number
+    user_id?: number
 };
 
 /*export interface ICharacter {

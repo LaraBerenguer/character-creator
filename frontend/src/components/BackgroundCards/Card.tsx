@@ -1,4 +1,5 @@
 import { useBackgroundContext } from "../../context/BackgroundContext";
+import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { IBackgroundType } from "../../../../common/types/background-type-interface";
 import { IBackground } from "../../../../common/types/background-interface";
@@ -10,7 +11,8 @@ interface CardProps {
 };
 
 const Card = ({ type }: CardProps) => {
-    const { getRandomBackground, addUserBackground, togglePinned, currentBackgrounds, pinnedBackgrounds } = useBackgroundContext();
+    const { getRandomBackground, addUserBackground, togglePinned, setOneBackground, currentBackgrounds, pinnedBackgrounds } = useBackgroundContext();
+    const { user } = useAuth();
     const [background, setBackground] = useState<IBackground | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,6 +27,7 @@ const Card = ({ type }: CardProps) => {
         const data = await getRandomBackground(type);
         if (data) {
             setBackground(data);
+            setOneBackground(data, type);
         }
     };
 
@@ -68,7 +71,7 @@ const Card = ({ type }: CardProps) => {
                     <button className={`btn pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
                         {pinnedBackgrounds[type] ? "Unpin" : "Pin"}
                     </button>
-                    <button className="btn addBackground text-xs" onClick={handleAddBackground}>
+                    <button disabled={!user} className="btn addBackground text-xs" onClick={handleAddBackground}>
                         Add Background
                     </button>
                     <CollapsedOptions type={type} />

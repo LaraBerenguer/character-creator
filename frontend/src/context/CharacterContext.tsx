@@ -5,10 +5,13 @@ import { ICharacter } from '../../../common/types/character-interface';
 
 interface CharacterContextProps {
     characters: ICharacter[];
-    getUserCharacters: (userid: number) => Promise<ICharacter[]>;
+    pendingCharacter: ICharacter | null;
+    getUserCharacters: () => Promise<ICharacter[]>;
     getAllCharacters: () => Promise<ICharacter[]>;
     createCharacter: (characterData: ICharacter) => void;
     removeCharacter: (characterId: number) => void;
+    setPendingCharacter: (character: ICharacter) => void;
+    clearPendingCharacter: () => void;
 };
 
 export const CharacterContext = createContext<CharacterContextProps | undefined>(undefined);
@@ -16,8 +19,15 @@ export const CharacterContext = createContext<CharacterContextProps | undefined>
 export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     const [characters, setCharacters] = useState<ICharacter[]>([]);
+    const [pendingCharacter, setPendingCharacter] = useState<ICharacter | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
+    //pending character
+    const clearPendingCharacter = () => {
+        setPendingCharacter(null);
+    };
+
+    //characters
     const getAllCharacters = async () => {
         setLoading(true);
         const allCharacters = await getCharacters();
@@ -32,9 +42,9 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         };
     };
 
-    const getUserCharacters = async (/*userid: number*/) => {
+    const getUserCharacters = async () => {
         setLoading(true);
-        const userCharacters: ICharacter[] = await getCharactersByUserId(/*userid*/);
+        const userCharacters: ICharacter[] = await getCharactersByUserId();
 
         if (userCharacters === null || userCharacters.length === 0) {
             setCharacters([]);
@@ -72,9 +82,12 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         getAllCharacters,
         createCharacter,
         removeCharacter,
+        setPendingCharacter,
+        clearPendingCharacter,
         characters,
-        loading
-    }), [characters, loading]);
+        loading,
+        pendingCharacter
+    }), [characters, loading, pendingCharacter]);
 
     return (
         <CharacterContext.Provider value={value}>

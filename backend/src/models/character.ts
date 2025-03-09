@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from '../database/connection';
 import User from './user';
 import Background from './background';

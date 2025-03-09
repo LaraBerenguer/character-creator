@@ -26,7 +26,7 @@ export const getCharactersById = async (req: Request, res: Response) => {
     };
 };
 
-export const getCharactersByUserId = async (req: Request, res: Response) => {    
+export const getCharactersByUserId = async (req: Request, res: Response) => {
     const userId = req.user_id; //from token   
 
     const characters = await Character.findAll({ where: { user_id: userId } });
