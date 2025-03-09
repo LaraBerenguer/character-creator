@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useCharacterContext } from "../../context/CharacterContext";
 import Loading from "../../components/Loading/Loading";
+import DeleteModal from "./DeleteModal";
 
-const charactersList = () => {
+const CharactersList: React.FC = () => {
     const { removeCharacter, characters, getUserCharacters } = useCharacterContext();
     const [loading, setLoading] = useState<boolean>(false);
     const [characterDeletingId, setCharacterDeletingId] = useState<number | null>(null);
@@ -77,20 +78,11 @@ const charactersList = () => {
                 </div>
             </div>
             <div>
-                <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">There's no coming back...</h3>
-                        <p className="py-4">Are you sure you want to delete this character?</p>
-                        <div className="modal-action">
-                            <button className="btn btn-error" onClick={handleConfirmDelete}>Delete</button>
-                            <button className="btn" onClick={handleCancelDelete}>Cancel</button>
-                        </div>
-                    </div>
-                </dialog>
+                <DeleteModal modalRef={modalRef} handleConfirmDelete={handleConfirmDelete} handleCancelDelete={handleCancelDelete} />
             </div>
         </>
 
     );
 };
 
-export default charactersList;
+export default CharactersList;
