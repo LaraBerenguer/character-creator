@@ -23,7 +23,7 @@ export const getCharacters = async () => {
 
     } catch (error) {
         console.error('Error fetching characters', error);
-        // TO DO redirect 500
+        throw error;
     };
 };
 
@@ -48,7 +48,7 @@ export const getCharactersByUserId = async () => {
 
     } catch (error) {
         console.error('Error fetching characters', error);
-        // TO DO redirect 500
+        throw error;
     };
 };
 
@@ -73,7 +73,7 @@ export const addCharacter = async (characterData: ICharacter) => {
 
     } catch (error) {
         console.error('Error creating character', error);
-        // TO DO redirect 500
+        throw error;
     };
 };
 
@@ -90,21 +90,12 @@ export const deleteCharacter = async (id: number) => {
         });
 
         if (!response.ok) {
-            throw new Error('Error deleting character:')
-        }
-        //testing mock
-        if (response.status === 404) {
-            console.log(`Successfully deleted mock character ${id}`);
-            return {
-                message: `Mock deletion success for ID: ${id}`,
-                success: true,
-                deletedId: id
-            };
+            throw new Error('Error deleting character:');
         };
 
         if (response.status === 204) {
             console.log(`Successfully deleted character ${id} (no content response)`);
-            return null
+            return null;
         };
 
         return await response.json();

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { IBackground } from '../../../common/types/background-interface';
 import { IBackgroundType } from '../../../common/types/background-type-interface';
 import { getBackgroundsByType, addBackground } from '../services/background-crud';
+import { useNavigate } from 'react-router-dom';
 
 
 interface BackgroundContextProps {
@@ -34,31 +35,44 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
 
     const [refreshBackgrounds, setRefreshBackgrounds] = useState(0);
+    const navigate = useNavigate();
 
     const getRandomBackground = async (type: IBackgroundType): Promise<IBackground> => {
-        const filteredBackgrounds = await getBackgroundsByType(type);
-        if (filteredBackgrounds === null || filteredBackgrounds.length === 0) {
-            throw new Error('Array should not be null');
-        } else {
-            return filteredBackgrounds[Math.floor(Math.random() * filteredBackgrounds.length)];
+        try {
+            const filteredBackgrounds = await getBackgroundsByType(type);
+            if (filteredBackgrounds === null || filteredBackgrounds.length === 0) {
+                throw new Error('Array should not be null');
+            } else {
+                return filteredBackgrounds[Math.floor(Math.random() * filteredBackgrounds.length)];
+            };
+        } catch (error) {
+            console.error('Error fetching backgrounds', error);
+            navigate("/500");
+            throw error;
         };
     };
 
     const getByType = async (type: IBackgroundType): Promise<IBackground[]> => {
-        const backgroundsByType = await getBackgroundsByType(type);
-        if (backgroundsByType === null) {
-            throw new Error('Array should not be null');
-        } else {
-            return backgroundsByType;
+        try {
+            const backgroundsByType = await getBackgroundsByType(type);
+            if (backgroundsByType === null) {
+                throw new Error('Array should not be null');
+            } else {
+                return backgroundsByType;
+            };
+        } catch (error) {
+            console.error('Error fetching backgrounds', error);
+            navigate("/500");
+            throw error;
         };
     };
 
     const getRandomAll = async () => {
-        const types = Object.values(IBackgroundType).filter(type => !pinnedBackgrounds[type]);        
+        const types = Object.values(IBackgroundType).filter(type => !pinnedBackgrounds[type]);
 
         const results = await Promise.all(
             types.map(type => getRandomBackground(type))
-        );       
+        );
 
         setCurrentBackgrounds(prev => {
             const newState = { ...prev };
@@ -79,9 +93,15 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     const addUserBackground = async (bgData: IBackground) => {
-        const addedBackground = await addBackground(bgData);
-        console.log('Updated backgrounds:', addedBackground);
-        setRefreshBackgrounds(prev => prev + 1);
+        try {
+            const addedBackground = await addBackground(bgData);
+            console.log('Updated backgrounds:', addedBackground);
+            setRefreshBackgrounds(prev => prev + 1);
+        } catch (error) {
+            console.error('Error fetching backgrounds', error);
+            navigate("/500");
+            throw error;
+        };
     };
 
     const value = useMemo(() => ({

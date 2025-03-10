@@ -24,7 +24,7 @@ export const getBackgroundsByType = async (type: IBackgroundType) => {
 
     } catch (error) {
         console.error('Error fetching backgrounds', error);
-        // TO DO redirect 500
+        throw error;
     };
 };
 
@@ -49,6 +49,6 @@ export const addBackground = async (bgData: IBackground) => {
 
     } catch (error) {
         console.error('Error creating backgrounds', error);
-        // TO DO redirect 500
+        throw error;
     };
 };
