@@ -15,27 +15,30 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const navigate = useNavigate();
-
-
     if (loading) { return <Loading /> };
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
-        //input validation
+        //input validation individual errors
         const validationResult = signupSchema.safeParse({ username, email, password });
+
         if (!validationResult.success) {
-            const errorMessage = validationResult.error.errors
-                .map(err => err.message)
-                .join(", ");
-            throw new Error(errorMessage);
-        }
+            const fieldErrors: Record<string, string> = {};
+
+            validationResult.error.errors.forEach(err => {
+                fieldErrors[err.path[0]] = err.message;
+            });
+            setErrors(fieldErrors);
+            return;
+        };
 
         try {
             setLoading(true);
-
             //TO DO Move fetch to context
             const response = await fetch(`${import.meta.env.VITE_API_URL_BACK || 'http://localhost:3001'}/api/register`, {
                 method: 'POST',
@@ -53,7 +56,6 @@ const SignUp = () => {
         } catch (error) {
             setLoading(false);
             setError(error instanceof Error ? error.message : 'An error occurred');
-            //display error in form
         }
     };
 
@@ -64,7 +66,7 @@ const SignUp = () => {
                     <h1 className="">Sign Up</h1>
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
-                <form onSubmit={handleSignUp} className='flex flex-col gap-3'>
+                <form onSubmit={handleSignUp} noValidate className='flex flex-col gap-3'>
                     <label className="input input-bordered flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -78,6 +80,7 @@ const SignUp = () => {
                         </svg>
                         <input type="email" name="email" className="grow" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                     </label>
+                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
                     <label className="input input-bordered flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -89,6 +92,7 @@ const SignUp = () => {
                         </svg>
                         <input type="text" name="username" className="grow" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
                     </label>
+                    {errors.username && <p className="text-red-500 text-xs">{errors.username}</p>}
                     <label className="input input-bordered flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -102,6 +106,7 @@ const SignUp = () => {
                         </svg>
                         <input type="password" name="password" className="grow" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                     </label>
+                    {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
                     <button className="btn btn-primary" disabled={loading}>{loading ? 'Signing up...' : 'Sign Up'}</button>
                 </form>
                 <div className="login-navigation text-center text-xs">
