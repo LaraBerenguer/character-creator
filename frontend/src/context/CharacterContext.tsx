@@ -1,12 +1,49 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useReducer } from 'react';
 import { getCharacters, getCharactersByUserId, addCharacter, deleteCharacter } from '../services/character-crud';
 import { ICharacter } from '../../../common/types/character-interface';
 import { useNavigate } from 'react-router-dom';
 
+//reducer
+interface State {
+    characters: ICharacter[],
+    pendingCharacters: ICharacter | null,
+    loading: boolean
+};
+
+type Action =
+    | { type: 'SET_CHARACTERS'; payload: ICharacter[] }
+    | { type: 'SET_PENDING_CHARACTERS'; payload: ICharacter | null }
+    | { type: 'SET_LOADING'; payload: boolean }
+    | { type: 'ADD_CHARACTER'; payload: ICharacter }
+    | { type: 'REMOVE_CHARACTER'; payload: number }
+
+const initialState = {
+    characters: [],
+    pendingCharacters: null,
+    loading: false
+};
+
+const reducer = (state: State, action: Action) => {
+    switch (action.type) {
+        case "SET_CHARACTERS":
+            return { ...state, characters: action.payload };
+        case "SET_PENDING_CHARACTERS":
+            return { ...state, pendingCharacters: action.payload };
+        case "SET_LOADING":
+            return { ...state, loading: action.payload };
+        case "ADD_CHARACTER":
+            return { ...state, characters: [...state.characters, action.payload] };
+        case "REMOVE_CHARACTER":
+            return { ...state, characters: state.characters.filter(char => char.id !== action.payload) };
+        default:
+            return state;
+    };
+};
 
 interface CharacterContextProps {
     characters: ICharacter[];
     pendingCharacter: ICharacter | null;
+    loading: boolean;
     getUserCharacters: () => Promise<ICharacter[]>;
     getAllCharacters: () => Promise<ICharacter[]>;
     createCharacter: (characterData: ICharacter) => void;
@@ -19,28 +56,31 @@ export const CharacterContext = createContext<CharacterContextProps | undefined>
 
 export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-    const [characters, setCharacters] = useState<ICharacter[]>([]);
-    const [pendingCharacter, setPendingCharacter] = useState<ICharacter | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [state, dispatch] = useReducer(reducer, initialState);
     const navigate = useNavigate();
 
     //pending character
     const clearPendingCharacter = () => {
-        setPendingCharacter(null);
+        dispatch({ type: "SET_PENDING_CHARACTERS", payload: null })
+    };
+
+    const setPendingCharacter = (character: ICharacter) => {
+        dispatch({ type: "SET_PENDING_CHARACTERS", payload: character })
     };
 
     //characters
     const getAllCharacters = async () => {
         try {
-            setLoading(true);
+            dispatch({ type: "SET_LOADING", payload: true })
             const allCharacters = await getCharacters();
+
             if (allCharacters === null || allCharacters.length === 0) {
-                setCharacters([]);
-                setLoading(false);
+                dispatch({ type: "SET_CHARACTERS", payload: [] });
+                dispatch({ type: "SET_LOADING", payload: false });
                 return [];
             } else {
-                setCharacters(allCharacters);
-                setLoading(false)
+                dispatch({ type: "SET_CHARACTERS", payload: allCharacters });
+                dispatch({ type: "SET_LOADING", payload: false });
                 return allCharacters;
             };
         } catch (error) {
@@ -52,16 +92,16 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const getUserCharacters = async () => {
         try {
-            setLoading(true);
+            dispatch({ type: "SET_LOADING", payload: true });
             const userCharacters: ICharacter[] = await getCharactersByUserId();
 
             if (userCharacters === null || userCharacters.length === 0) {
-                setCharacters([]);
-                setLoading(false);
+                dispatch({ type: "SET_CHARACTERS", payload: [] });
+                dispatch({ type: "SET_LOADING", payload: false });
                 return [];
             } else {
-                setCharacters(userCharacters);
-                setLoading(false);
+                dispatch({ type: "SET_CHARACTERS", payload: userCharacters });
+                dispatch({ type: "SET_LOADING", payload: false });
                 return userCharacters;
             };
         } catch (error) {
@@ -73,10 +113,10 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     const createCharacter = async (characterData: ICharacter) => {
         try {
-            setLoading(true);
+            dispatch({ type: "SET_LOADING", payload: true });
             const addedCharacter = await addCharacter(characterData);
-            setCharacters(prev => [...prev, addedCharacter]);
-            setLoading(false);
+            dispatch({ type: "ADD_CHARACTER", payload: addedCharacter });
+            dispatch({ type: "SET_LOADING", payload: false });
             console.log('Updated character:', addedCharacter);
         } catch (error) {
             console.error('Error adding characters', error);
@@ -86,11 +126,11 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
 
     const removeCharacter = async (characterId: number) => {
-        setLoading(true);
         try {
+            dispatch({ type: "SET_LOADING", payload: true });
             const deletedCharacter = await deleteCharacter(characterId);
-            setCharacters(prev => prev.filter(character => character.id !== characterId));
-            setLoading(false);
+            dispatch({ type: "REMOVE_CHARACTER", payload: characterId });
+            dispatch({ type: "SET_LOADING", payload: false });
             console.log('Deleted character:', deletedCharacter);
         } catch (error) {
             console.error('Failed to delete character:', error);
@@ -104,12 +144,12 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         getAllCharacters,
         createCharacter,
         removeCharacter,
-        setPendingCharacter,
         clearPendingCharacter,
-        characters,
-        loading,
-        pendingCharacter
-    }), [characters, loading, pendingCharacter]);
+        setPendingCharacter,
+        characters: state.characters,
+        loading: state.loading,
+        pendingCharacter: state.pendingCharacters
+    }), [state.characters, state.loading, state.pendingCharacters]);
 
     return (
         <CharacterContext.Provider value={value}>
