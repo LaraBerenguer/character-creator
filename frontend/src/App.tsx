@@ -8,6 +8,8 @@ import Layout from './layout/layout';
 import SignUp from './auth/SignUp';
 import ProtectedRoute from './auth/ProtectedRoutes';
 import UserDashboard from './pages/UserDashboard';
+import NotFoundPage from './pages/NotFound';
+import Error500 from './pages/Error500';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path='*' element={<NotFoundPage />} />
+          <Route path="/500" element={<Error500 />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/creation" element={<CharacterCreation />} />
             <Route path="/creation/name" element={<CharacterName />} />
