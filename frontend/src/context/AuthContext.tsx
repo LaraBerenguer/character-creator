@@ -3,11 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 //validation form
-const loginInputSchema = z.object({
-    email: z.string().email("Invalid email format"),
-    password: z.string().min(6, "Password must be at least 6 characters")
-});
-
 const tokenResponseSchema = z.object({
     access_token: z.string()
 });
@@ -19,7 +14,6 @@ const userSchema = z.object({
 });
 
 type User = z.infer<typeof userSchema>;
-//type LoginInput = z.infer<typeof loginInputSchema>;
 
 interface AuthContextProps {
     user: User | null;
@@ -74,18 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const login = async (email: string, password: string) => {
         try {
             setLoading(true);
-            setError(null);
-
-            //validations
-            const validationResult = loginInputSchema.safeParse({ email, password });
-            if (!validationResult.success) {
-                const errorMessage = validationResult.error.errors
-                    .map(err => err.message)
-                    .join(", ");
-                setError(errorMessage);
-                setLoading(false);
-                return;
-            };
+            setError(null);            
 
             const response = await fetch(`${BACK_URL}/api/login`, {
                 method: 'POST',
@@ -96,7 +79,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
 
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Login failed');
+            if (!response.ok) {
+                const errMsg = (data.error || data.msg ||'Login failed');
+                setError(errMsg);
+                setLoading(false);
+                return;
+            }; 
 
             //token validation
             const tokenValidation = tokenResponseSchema.safeParse(data);
@@ -117,17 +105,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const userData = await userResponse.json();
             if (!userResponse.ok) throw new Error(userData.error || 'Failed to fetch user');
 
-            //user validation
-            const userValidation = userSchema.safeParse(userData);
-            if (!userValidation.success) {
-                throw new Error("Invalid user data format");
-            }
-
-            const validatedUser = userValidation.data;
-
             localStorage.setItem('user', JSON.stringify(userData));
 
-            setUser(validatedUser);
+            setUser(userData);
             navigate('/');
             setLoading(false);
             return;

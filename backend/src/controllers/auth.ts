@@ -6,9 +6,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+//token fields
 interface JwtPayload {
     id: number;
-    // Add any other fields you include in your token
 }
 
 export const createUser = async (req: Request, res: Response) => {
@@ -73,13 +73,13 @@ export const loginUser = async (req: Request, res: Response) => {
         });
 
         if (!user) {
-            return res.status(401).json({ error: "Invalid email/password" });
+            return res.status(401).json({ error: "User not found" });
         }
 
         const validPassword = await compare(password, user.password);
 
         if (!validPassword) {
-            return res.status(401).json({ error: "Invalid email/password" });
+            return res.status(401).json({ error: "Invalid password" });
         }
 
         console.log("SECRET_KEY", process.env.SECRET_KEY);

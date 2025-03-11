@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { z } from "zod";
+
+const signupSchema = z.object({
+    email: z.string().email("Invalid email format"),
+    password: z.string().min(6, "Password must be at least 6 characters")
+});
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login, loading, error, user } = useAuth();
-    const [formError, setFormError] = useState<boolean>(false);
+    const { login, loading, error: authError, user } = useAuth();
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,15 +23,24 @@ const Login = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email || !password) {
-            setFormError(true);
-        } else {
-            try {
-                setFormError(false);
-                await login(email, password);
-            } catch (error) {
-                console.error('Login failed:');
-            };
+        setErrors({});
+        //input validation individual errors
+        const validationResult = signupSchema.safeParse({ email, password });
+
+        if (!validationResult.success) {
+            const fieldErrors: Record<string, string> = {};
+
+            validationResult.error.errors.forEach(err => {
+                fieldErrors[err.path[0]] = err.message;
+            });
+            setErrors(fieldErrors);
+            return;
+        };
+
+        try {
+            await login(email, password);
+        } catch (error) {
+            console.error('Login failed:');
         };
     };
 
@@ -35,6 +50,7 @@ const Login = () => {
                 <div className="login-page-title prose text-start">
                     <h1 className="">Log In</h1>
                 </div>
+                {authError && <p className="text-red-500">{authError}</p>}
                 <form onSubmit={handleLogin} className='flex flex-col gap-3'>
                     <label className="input input-bordered flex items-center gap-2">
                         <svg
@@ -49,6 +65,7 @@ const Login = () => {
                         </svg>
                         <input type="text" className="grow" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                     </label>
+                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
                     <label className="input input-bordered flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -62,17 +79,7 @@ const Login = () => {
                         </svg>
                         <input type="password" className="grow" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                     </label>
-                    {error &&
-                        <div className="login-error bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                            <strong className="font-bold">Invalid mail or password</strong>
-                            <span className="block sm:inline">{error}</span>
-                        </div>
-                    }
-                    {formError &&
-                        <div className="login-error bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                            <span className="block sm:inline">{error}</span>
-                        </div>
-                    }
+                    {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
                     <button className="btn btn-primary" disabled={loading}>{loading ? 'Logging in...' : 'Log In'}</button>
                 </form>
                 <div className="login-navigation text-center text-xs">
@@ -82,5 +89,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;
