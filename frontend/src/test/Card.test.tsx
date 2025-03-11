@@ -1,26 +1,31 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Card from '../components/Card';
-import { BackgroundContext } from '../context/BackgroundContext';
+import Card from '../components/BackgroundCards/Card';
 import { IBackgroundType } from '../../../common/types/background-type-interface';
 
-/*const mockBackground = {
-    id: '1',
-    title: 'Test Background',
-    description: 'Test Description',
-    type: IBackgroundType.TRAIT
-};*/
+const mockTogglePinned = vi.fn();
 
-describe('Card', () => {
-    beforeEach(() => {        
-        window.HTMLDialogElement.prototype.showModal = vi.fn();
-        window.HTMLDialogElement.prototype.close = vi.fn();
-    });
+beforeEach(() => {
+    HTMLDialogElement.prototype.showModal = vi.fn();
+    HTMLDialogElement.prototype.close = vi.fn();
+});
 
-    const mockContextValue = {
+//context mock
+vi.mock('../context/AuthContext', () => ({
+    useAuth: () => ({
+        user: { id: 1, username: 'testuser', email: 'test@example.com' },
+        loading: false,
+        error: null,
+        login: vi.fn(),
+        logout: vi.fn()
+    })
+}));
+
+vi.mock('../context/BackgroundContext', () => ({
+    useBackgroundContext: () => ({
         getRandomBackground: vi.fn(),
         addUserBackground: vi.fn(),
-        togglePinned: vi.fn(),
+        togglePinned: mockTogglePinned,
         currentBackgrounds: {
             [IBackgroundType.TRAIT]: null,
             [IBackgroundType.BOND]: null,
@@ -35,16 +40,22 @@ describe('Card', () => {
         },
         getByType: vi.fn(),
         getRandomAll: vi.fn(),
-        setOneBackground: vi.fn()
-    };
+        setOneBackground: vi.fn(),
+        refreshBackgrounds: 0
+    })
+}));
+
+describe('Card', () => {
+    beforeEach(() => {
+        vi.resetAllMocks();
+    });
 
     test('renders card with initial empty state', () => {
         render(
-            <BackgroundContext.Provider value={mockContextValue}>
-                <Card type={IBackgroundType.TRAIT} />
-            </BackgroundContext.Provider>
+            <Card type={IBackgroundType.TRAIT} />
         );
 
+        //screen.debug
         expect(screen.getByText('TRAIT')).toBeInTheDocument();
         expect(screen.getByText('?')).toBeInTheDocument();
         expect(screen.getByText('???')).toBeInTheDocument();
@@ -52,14 +63,13 @@ describe('Card', () => {
 
     test('handles pin toggle correctly', () => {
         render(
-            <BackgroundContext.Provider value={mockContextValue}>
-                <Card type={IBackgroundType.TRAIT} />
-            </BackgroundContext.Provider>
+            <Card type={IBackgroundType.TRAIT} />
         );
 
         const pinButton = screen.getByText('Pin');
         fireEvent.click(pinButton);
+        //userevent
 
-        expect(mockContextValue.togglePinned).toHaveBeenCalledWith(IBackgroundType.TRAIT);
-    });    
+        expect(mockTogglePinned).toHaveBeenCalledWith(IBackgroundType.TRAIT);
+    });
 });
