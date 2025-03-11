@@ -9,7 +9,7 @@ export default mergeConfig(
   defineVitestConfig({
     test: {
       environment: 'jsdom',
-      setupFiles: './src/test/setup.ts',
+      setupFiles: './tests/vitest/setup.ts',
       globals: true
     }
   })
