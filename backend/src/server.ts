@@ -7,6 +7,7 @@ import loginRoutes from './routes/login';
 import registerRoutes from './routes/register';
 import usersRoutes from './routes/users';
 import characterRoutes from './routes/characters';
+import aiRoutes from './routes/ai-integrations';
 
 class Server {
     private readonly app: express.Application;
@@ -51,6 +52,7 @@ class Server {
         this.app.use('/api/login', loginRoutes);
         this.app.use('/api', usersRoutes);
         this.app.use('/api/characters', characterRoutes);
+        this.app.use('/api/ai', aiRoutes);
 
         this.app.use((err: any, req: Request, res: Response, next: Function) => {
             console.error(err);
