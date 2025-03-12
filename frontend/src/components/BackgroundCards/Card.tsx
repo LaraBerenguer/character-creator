@@ -59,7 +59,7 @@ const Card = ({ type }: CardProps) => {
                 <div className="font-light">{type.toUpperCase()}</div>
             </div>
             <div className="flex flex-col">
-                <a onClick={handleClick}>
+                <a onClick={handleClick} aria-label={`Get random ${type}`} tabIndex={0} data-testid="card-link">
                     <div className="card bg-neutral text-neutral-content w-96">
                         <div className="card-body items-center text-center">
                             <h2 className="card-title">{background ? background.title : '?'}</h2>
