@@ -113,12 +113,12 @@ describe('Card', () => {
         const emptyContextValue = {
             ...mockContextValue,
             currentBackgrounds: {
-                [IBackgroundType.TRAIT]: { id: 0, title: '', description: '', type: IBackgroundType.TRAIT },
-                [IBackgroundType.BOND]: { id: 0, title: '', description: '', type: IBackgroundType.BOND },
-                [IBackgroundType.FLAW]: { id: 0, title: '', description: '', type: IBackgroundType.FLAW },
-                [IBackgroundType.IDEAL]: { id: 0, title: '', description: '', type: IBackgroundType.IDEAL }
-            }
-        };
+                [IBackgroundType.TRAIT]: null,
+                [IBackgroundType.BOND]: null,
+                [IBackgroundType.FLAW]: null,
+                [IBackgroundType.IDEAL]: null
+            } 
+        } as unknown as typeof mockContextValue;
 
         render(
             <MockAuthProvider contextValue={mockAuthContextValue}>
@@ -130,8 +130,8 @@ describe('Card', () => {
 
         //screen.debug
         expect(screen.getByText('TRAIT')).toBeInTheDocument();
-        //expect(screen.getByText('?')).toBeInTheDocument();
-        //expect(screen.getByText('???')).toBeInTheDocument();
+        expect(screen.getByText('?')).toBeInTheDocument();
+        expect(screen.getByText('???')).toBeInTheDocument();
     });
 
     test('renders card with specific background data', () => {
