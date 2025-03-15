@@ -4,7 +4,6 @@ import { IBackgroundType } from '../../../common/types/background-type-interface
 import { getBackgroundsByType, addBackground } from '../services/background-crud';
 import { useNavigate } from 'react-router-dom';
 
-
 interface BackgroundContextProps {
     getRandomBackground: (type: IBackgroundType) => Promise<IBackground>;
     getByType: (type: IBackgroundType) => Promise<IBackground[]>;
@@ -12,6 +11,7 @@ interface BackgroundContextProps {
     getRandomAll: () => Promise<void>;
     togglePinned: (type: IBackgroundType) => void;
     setOneBackground: (optionBackground: IBackground, type: IBackgroundType) => void;
+    clearBackgrounds: () => void;
     currentBackgrounds: Record<IBackgroundType, IBackground | null>;
     pinnedBackgrounds: Record<IBackgroundType, boolean>;
     refreshBackgrounds: Number;
@@ -104,6 +104,15 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         };
     };
 
+    const clearBackgrounds = () => {
+        setCurrentBackgrounds({
+            [IBackgroundType.TRAIT]: null,
+            [IBackgroundType.BOND]: null,
+            [IBackgroundType.FLAW]: null,
+            [IBackgroundType.IDEAL]: null
+        })
+    };
+
     const value = useMemo(() => ({
         getRandomBackground,
         getByType,
@@ -111,6 +120,7 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         getRandomAll,
         togglePinned,
         setOneBackground,
+        clearBackgrounds,
         currentBackgrounds,
         pinnedBackgrounds,
         refreshBackgrounds

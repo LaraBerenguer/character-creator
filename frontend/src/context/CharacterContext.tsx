@@ -1,18 +1,20 @@
 import React, { createContext, useContext, useMemo, useReducer } from 'react';
 import { getCharacters, getCharactersByUserId, addCharacter, deleteCharacter } from '../services/character-crud';
+import { generateCharacterDescription } from '../services/ai-integration';
 import { ICharacter } from '../../../common/types/character-interface';
+import { IPendingCharacter } from "../../../common/types/pending-character-interface";
 import { useNavigate } from 'react-router-dom';
 
 //reducer
 interface State {
     characters: ICharacter[],
-    pendingCharacters: ICharacter | null,
+    pendingCharacters: IPendingCharacter | null,
     loading: boolean
 };
 
 type Action =
     | { type: 'SET_CHARACTERS'; payload: ICharacter[] }
-    | { type: 'SET_PENDING_CHARACTERS'; payload: ICharacter | null }
+    | { type: 'SET_PENDING_CHARACTERS'; payload: IPendingCharacter | null }
     | { type: 'SET_LOADING'; payload: boolean }
     | { type: 'ADD_CHARACTER'; payload: ICharacter }
     | { type: 'REMOVE_CHARACTER'; payload: number }
@@ -42,14 +44,15 @@ const reducer = (state: State, action: Action) => {
 
 interface CharacterContextProps {
     characters: ICharacter[];
-    pendingCharacter: ICharacter | null;
+    pendingCharacter: IPendingCharacter | null;
     loading: boolean;
     getUserCharacters: () => Promise<ICharacter[]>;
     getAllCharacters: () => Promise<ICharacter[]>;
     createCharacter: (characterData: ICharacter) => void;
     removeCharacter: (characterId: number) => void;
-    setPendingCharacter: (character: ICharacter) => void;
+    setPendingCharacter: (character: IPendingCharacter) => void;
     clearPendingCharacter: () => void;
+    generateDescription: (character: ICharacter) => Promise<string>;
 };
 
 export const CharacterContext = createContext<CharacterContextProps | undefined>(undefined);
@@ -64,8 +67,24 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         dispatch({ type: "SET_PENDING_CHARACTERS", payload: null })
     };
 
-    const setPendingCharacter = (character: ICharacter) => {
+    const setPendingCharacter = (character: IPendingCharacter) => {
         dispatch({ type: "SET_PENDING_CHARACTERS", payload: character })
+    };
+
+    const generateDescription = async (character: ICharacter) => {
+        try {
+            dispatch({ type: "SET_LOADING", payload: true });
+            const description = await generateCharacterDescription(character);
+
+            dispatch({ type: "SET_LOADING", payload: false });
+            return description;
+
+        } catch (error) {
+            console.error('Error generating description', error);
+            dispatch({ type: "SET_LOADING", payload: false });
+            navigate("/500");
+            throw error;
+        };
     };
 
     //characters
@@ -146,6 +165,7 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         removeCharacter,
         clearPendingCharacter,
         setPendingCharacter,
+        generateDescription,
         characters: state.characters,
         loading: state.loading,
         pendingCharacter: state.pendingCharacters

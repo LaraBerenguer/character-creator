@@ -54,6 +54,19 @@ export const getCharactersByUserId = async () => {
 
 //post
 export const addCharacter = async (characterData: ICharacter) => {
+
+    const backendCharacter = {
+        ...characterData,
+        trait_id: characterData.trait.id,
+        bond_id: characterData.bond.id,
+        flaw_id: characterData.flaw.id,
+        ideal_id: characterData.ideal.id
+    };
+    console.log("TOMATEEEEEEEEEEEEEEEEEEEEEEEEEE");
+    console.log(characterData);
+    console.log("PEPINOOOOO");
+    console.log(backendCharacter);
+    console.log("---------------------------");
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/characters`, {
@@ -62,7 +75,7 @@ export const addCharacter = async (characterData: ICharacter) => {
                 'Content-Type': 'application/json',
                 'Authorization': token ? `Bearer ${token}` : ''
             },
-            body: JSON.stringify(characterData)
+            body: JSON.stringify(backendCharacter)
         });
 
         if (!response.ok) {
