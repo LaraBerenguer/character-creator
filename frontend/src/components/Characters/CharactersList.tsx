@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useCharacterContext } from "../../context/CharacterContext";
 import Loading from "../../components/Loading/Loading";
 import DeleteModal from "./DeleteModal";
+import { useNavigate } from "react-router-dom";
 
 const CharactersList: React.FC = () => {
     const { removeCharacter, characters, getUserCharacters } = useCharacterContext();
     const [loading, setLoading] = useState<boolean>(false);
     const [characterDeletingId, setCharacterDeletingId] = useState<number | null>(null);
     const modalRef = useRef<HTMLDialogElement>(null);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -22,7 +24,6 @@ const CharactersList: React.FC = () => {
         };
 
         fetchCharaters();
-
     }, []);
 
     const handleConfirmDelete = () => {
@@ -43,12 +44,21 @@ const CharactersList: React.FC = () => {
         modalRef.current?.showModal();
     };
 
+    const handleNavigateToInfo = (characterId: number) => {
+        navigate(`/dashboard/character/${characterId}`);
+    };
+
 
     if (loading) return <Loading />;
 
     return (
         <>
             <div className="user-dashboard-elements">
+                <div className="user-dashboard-button flex justify-start px-2">
+                    <button className="btn btn-circle mx-3" onClick={() => navigate("/")}>
+                        <svg className="h-6 w-6 fill-current md:h-8 md:w-8 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"></path></svg>
+                    </button>
+                </div>
                 <div className="user-dashboard-main flex justify-center">
                     <ul className="list flex flex-col gap-5 max-w-md">
                         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Your characters</li>
@@ -60,10 +70,10 @@ const CharactersList: React.FC = () => {
                                             <div className="character-name text-xs uppercase font-semibold opacity-60">{character.name}</div>
                                         </div>
                                         <p className="character-description list-col-wrap text-xs">
-                                            {character.description}
+                                            {character.description === null ? `This is your character ${character.name}` : character.description}
                                         </p>
                                     </div>
-                                    <button className="btn btn-square btn-ghost">
+                                    <button className="btn btn-square btn-ghost" onClick={() => { handleNavigateToInfo(character.id!) }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                     </button>
                                     <button className="btn btn-square btn-ghost" onClick={() => { handleDeleteClick(character.id!) }}>

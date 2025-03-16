@@ -28,6 +28,30 @@ export const getBackgroundsByType = async (type: IBackgroundType) => {
     };
 };
 
+export const getBackgroundsById = async (id: number) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BACK_URL}/api/backgrounds/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        const data = response.json();
+        return data;
+
+    } catch (error) {
+        console.error('Error fetching backgrounds', error);
+        throw error;
+    };
+};
+
 //post
 export const addBackground = async (bgData: IBackground) => {
     try {

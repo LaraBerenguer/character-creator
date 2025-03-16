@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import Character from '../models/character';
+import Background from "../models/background";
+import { ICharacter } from "common/types/character-interface";
 
 export const getCharacters = async (req: Request, res: Response) => {
-    const characters = await Character.findAll();
+    const characters = await Character.findAll(); //add models later if used
     if (characters) {
         res.json(characters);
     } else {
@@ -15,7 +17,7 @@ export const getCharacters = async (req: Request, res: Response) => {
 export const getCharactersById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const characters = await Character.findAll({ where: { id } });
+    const characters = await Character.findAll({ where: { id } }); //add models later if used
 
     if (characters) {
         res.json(characters);
@@ -29,15 +31,30 @@ export const getCharactersById = async (req: Request, res: Response) => {
 export const getCharactersByUserId = async (req: Request, res: Response) => {
     const userId = req.user_id; //from token   
 
-    const characters = await Character.findAll({ where: { user_id: userId } });
-
-    if (characters) {
-        res.json(characters);
-    } else {
-        res.status(404).json({
-            msg: `No characters found for user ${userId}`
-        })
-    };
+    try {
+        const characters = await Character.findAll({ 
+            where: { user_id: userId },
+            include: [
+                { model: Background, as: 'trait' },
+                { model: Background, as: 'flaw' },
+                { model: Background, as: 'bond' },
+                { model: Background, as: 'ideal' },
+            ],
+        }) as unknown as ICharacter[];
+        
+        if (characters && characters.length > 0) {
+            res.json(characters);
+        } else {
+            res.status(404).json({
+                msg: `No characters found for user ${userId}`
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching characters:', error);
+        res.status(500).json({
+            msg: "Error retrieving characters with backgrounds"
+        });
+    }
 };
 
 export const createCharacter = async (req: Request, res: Response) => {
@@ -48,6 +65,14 @@ export const createCharacter = async (req: Request, res: Response) => {
 
     try {
         const characterdb = await Character.create(body);
+        await characterdb.reload({
+            include: [
+            { model: Background, as: 'trait' },
+            { model: Background, as: 'flaw' },
+            { model: Background, as: 'bond' },
+            { model: Background, as: 'ideal' },
+            ],
+        });
         res.status(201).json(characterdb);
     } catch (error) {
         console.log(error);

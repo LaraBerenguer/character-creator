@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { IBackground } from '../../../common/types/background-interface';
 import { IBackgroundType } from '../../../common/types/background-type-interface';
-import { getBackgroundsByType, addBackground } from '../services/background-crud';
+import { getBackgroundsByType, addBackground, getBackgroundsById } from '../services/background-crud';
 import { useNavigate } from 'react-router-dom';
 
 interface BackgroundContextProps {
     getRandomBackground: (type: IBackgroundType) => Promise<IBackground>;
     getByType: (type: IBackgroundType) => Promise<IBackground[]>;
+    getBackgroundById: (id: number) => Promise<IBackground>;
     addUserBackground: (bgData: IBackground) => void;
     getRandomAll: () => Promise<void>;
     togglePinned: (type: IBackgroundType) => void;
@@ -67,6 +68,17 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         };
     };
 
+    const getBackgroundById = async (id: number): Promise<IBackground> => {
+        try {
+            const backgroundsById = await getBackgroundsById(id);
+            return backgroundsById;
+        } catch (error) {
+            console.error('Error fetching backgrounds', error);
+            navigate("/500");
+            throw error;
+        };
+    };    
+
     const getRandomAll = async () => {
         const types = Object.values(IBackgroundType).filter(type => !pinnedBackgrounds[type]);
 
@@ -116,6 +128,7 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const value = useMemo(() => ({
         getRandomBackground,
         getByType,
+        getBackgroundById,
         addUserBackground,
         getRandomAll,
         togglePinned,

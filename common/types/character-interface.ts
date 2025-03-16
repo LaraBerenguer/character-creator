@@ -10,11 +10,3 @@ export interface ICharacter {
     ideal: IBackground,
     user_id?: number
 };
-
-/*export interface ICharacter {
-    name?: string,
-    trait: ITrait,
-    flaw: IFlaw,
-    bond: IBond,
-    ideal: IIdeal
-};*/

@@ -3,7 +3,7 @@ import { ICharacter } from '../../../common/types/character-interface';
 const BACK_URL = import.meta.env.VITE_API_URL_BACK || "http://localhost:3001";
 
 //get all
-export const getCharacters = async () => {
+export const getCharacters = async (): Promise<ICharacter[]> => {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/characters`, {
@@ -28,7 +28,7 @@ export const getCharacters = async () => {
 };
 
 //get by id
-export const getCharactersByUserId = async () => {
+export const getCharactersByUserId = async (): Promise<ICharacter[]> =>  {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/characters/user`, {
@@ -43,7 +43,8 @@ export const getCharactersByUserId = async () => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         };
 
-        const data = response.json();
+        const data = await response.json();
+        
         return data;
 
     } catch (error) {
@@ -53,7 +54,7 @@ export const getCharactersByUserId = async () => {
 };
 
 //post
-export const addCharacter = async (characterData: ICharacter) => {
+export const addCharacter = async (characterData: ICharacter): Promise<ICharacter> => {
 
     const backendCharacter = {
         ...characterData,

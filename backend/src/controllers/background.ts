@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Background from '../models/background';
+import  Background from '../models/background';
 import { Op } from "sequelize";
 
 export const getBackgroundsByType = async (req: Request, res: Response) => {
@@ -8,9 +8,15 @@ export const getBackgroundsByType = async (req: Request, res: Response) => {
 
     const backgrounds = await Background.findAll({
         where: {
-            [Op.and]: [{ type: type }, { [Op.or]: [{ user_id: null }, { user_id: userId }] }],
+            type: type,
+            [Op.or]: [
+                { user_id: { [Op.is]: null as any } },
+                { user_id: userId }
+            ]
         }
     });
+
+    console.log("BACKGROUNDS: ", backgrounds);
 
     if (backgrounds) {
         res.json(backgrounds);
@@ -19,6 +25,26 @@ export const getBackgroundsByType = async (req: Request, res: Response) => {
             msg: `Something went wrong with type ${type}`
         })
     };
+};
+
+export const getBackgroundsById = async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+
+    try {
+        const background = await Background.findByPk(id);
+
+        if (background) {
+            res.json(background);
+        } else {
+            res.status(404).json({
+                msg: `Background with id ${id} not found`
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            msg: "Something went wrong"
+        });
+    }
 };
 
 export const createBackground = async (req: Request, res: Response) => {
