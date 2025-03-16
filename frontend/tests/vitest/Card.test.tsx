@@ -42,7 +42,9 @@ const mockContextValue = {
     getByType: vi.fn(),
     getRandomAll: vi.fn(),
     setOneBackground: vi.fn(),
-    refreshBackgrounds: 0
+    refreshBackgrounds: 0,
+    getBackgroundById: vi.fn(),
+    clearBackgrounds: vi.fn()
 };
 
 const mockAuthContextValue = {
