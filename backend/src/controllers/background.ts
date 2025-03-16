@@ -16,8 +16,6 @@ export const getBackgroundsByType = async (req: Request, res: Response) => {
         }
     });
 
-    console.log("BACKGROUNDS: ", backgrounds);
-
     if (backgrounds) {
         res.json(backgrounds);
     } else {

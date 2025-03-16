@@ -7,6 +7,7 @@ import { useCharacterContext } from "../../context/CharacterContext";
 const NameInput = () => {
     const { setPendingCharacter } = useCharacterContext();
     const [name, setName] = useState("");
+    const [showToast, setShowToast] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +16,8 @@ const NameInput = () => {
 
     const handleNameCharacter = () => {
         if (!name.trim()) {
-            alert("Please enter a character name");
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
             return;
         }
 
@@ -47,6 +49,13 @@ const NameInput = () => {
                 </div>
 
             </div>
+            {showToast && (
+                <div className="toast toast-end">
+                    <div className="alert alert-error">
+                        <span>Please enter a Character Name.</span>
+                    </div>
+                </div>
+            )}
         </div>
 
     );

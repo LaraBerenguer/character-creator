@@ -16,6 +16,7 @@ const CharacterCards = () => {
     const { pendingCharacter, loading, setPendingCharacter, generateDescription, createCharacter } = useCharacterContext();
     const [description, setDescription] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [showToast, setShowToast] = useState<boolean>(false);
     const modalRef = useRef<HTMLDialogElement>(null);
     const navigate = useNavigate();
 
@@ -37,7 +38,8 @@ const CharacterCards = () => {
         const ideal = currentBackgrounds[IBackgroundType.IDEAL];
 
         if (!trait || !flaw || !bond || !ideal) {
-            alert("Please select all character traits before continuing");
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
             return;
         }
 
@@ -105,6 +107,13 @@ const CharacterCards = () => {
                 </div>
             </div>
             <DescriptionModal modalRef={modalRef} description={description} AcceptDescription={AcceptDescription} CancelDescription={CancelDescription} />
+            {showToast && (
+                <div className="toast toast-end">
+                    <div className="alert alert-error">
+                        <span>Please select all traits before continuing</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

@@ -30,8 +30,7 @@ export const generateCharacterDescription = async (req: Request, res: Response) 
             throw new Error (`Error: ${response.status} - ${response.statusText}`);
         }
 
-        const data = await response.json();
-        console.log("data: ", data.choices[0].message.content);
+        const data = await response.json();        
         res.status(200).json({ description: data.choices[0].message.content});
     } catch (error) {
         console.error("Error generating character description:", error);

@@ -63,11 +63,7 @@ export const addCharacter = async (characterData: ICharacter): Promise<ICharacte
         flaw_id: characterData.flaw.id,
         ideal_id: characterData.ideal.id
     };
-    console.log("TOMATEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    console.log(characterData);
-    console.log("PEPINOOOOO");
-    console.log(backendCharacter);
-    console.log("---------------------------");
+    
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${BACK_URL}/api/characters`, {

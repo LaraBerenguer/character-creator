@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ICharacter } from "../../../common/types/character-interface";
-import { useCharacterContext } from "../context/CharacterContext";
+import { ICharacter } from "../../../../common/types/character-interface";
+import { useCharacterContext } from "../../context/CharacterContext";
 
 const CharacterInfo = () => {
     const { id } = useParams<{ id: string }>();
@@ -12,10 +12,7 @@ const CharacterInfo = () => {
     useEffect(() => {
         if (id && characters.length > 0) {
             const foundCharacter = characters.find(char => char.id === Number(id));
-            console.log("--Characters--");
-            console.log(characters);
-            setCurrentCharacter(foundCharacter || null);
-            console.log(foundCharacter);
+            setCurrentCharacter(foundCharacter || null);            
         }
     }, [id, characters]);
 
