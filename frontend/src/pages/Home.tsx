@@ -13,9 +13,9 @@ const Home = () => {
             </section>
             <section>
                 <div className="text-center prose mt-16 lg:mt-40 w-80 max-w-full">
-                    <div><Link className="no-underline hover:glow transition-all duration-300" to={user ? "/dashboard" : "/login"}><h2 className="text-[170%]">{user ? "My Characters" : "Login"}</h2></Link></div>
-                    <div className="divider">OR</div>
-                    <div><Link to="/name" className="no-underline hover:glow transition-all duration-300"><h2 className="text-[170%] mt-[9%]">Create a new Character</h2></Link></div>
+                    <div><Link className="no-underline hover:text-accent transition-all duration-400" to={user ? "/dashboard" : "/login"}><h2 className="text-[170%] hover:text-accent">{user ? "My Characters" : "Login"}</h2></Link></div>
+                    <div className="divider text-accent">OR</div>
+                    <div><Link to="/name" className="no-underline hover:text-accent transition-all duration-400"><h2 className="text-[170%] mt-[9%] hover:text-accent">Create a new Character</h2></Link></div>
                 </div>
             </section>
 

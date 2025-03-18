@@ -83,7 +83,7 @@ const CharacterCards = () => {
         };
         modalRef.current?.close();
         setIsModalOpen(false);
-        showToast("Your description is saved!", "success");
+        showToast("Your description is saved!", "info");
     };
 
     const CancelDescription = () => {

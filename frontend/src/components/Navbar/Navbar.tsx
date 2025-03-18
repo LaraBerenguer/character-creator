@@ -32,7 +32,9 @@ const Navbar = () => {
         <>
             <div className="navbar">
                 <div className="flex-1">
-                    <Link className="btn btn-ghost text-xl" to='/'>Menu</Link>
+                    <Link to='/' className="hover:scale-105 transition-transform duration-300">
+                        <img src="/d20logo.png" alt="Logo" className="h-12" />
+                    </Link>
                 </div>
                 <div className="flex-none gap-2">
                     <div ref={dropdownRef} className="dropdown dropdown-end">
@@ -40,7 +42,7 @@ const Navbar = () => {
                             <div className="w-10 rounded-full">
                                 <img
                                     alt="My Profile"
-                                    src={user ? "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" : "https://images.pexels.com/photos/6985184/pexels-photo-6985184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} />
+                                    src={user ? "/woman.png" : "user.png"} />
                             </div>
                         </div>
                         {isOpen && (
