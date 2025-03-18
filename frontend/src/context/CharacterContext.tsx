@@ -71,6 +71,7 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         dispatch({ type: "SET_PENDING_CHARACTERS", payload: character })
     };
 
+    //description
     const generateDescription = async (character: ICharacter) => {
         try {
             dispatch({ type: "SET_LOADING", payload: true });

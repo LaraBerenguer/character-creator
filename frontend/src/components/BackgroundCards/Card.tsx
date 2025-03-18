@@ -58,9 +58,9 @@ const Card = ({ type }: CardProps) => {
             <div className="card-title flex justify-center prose my-2">
                 <div className="font-light">{type.toUpperCase()}</div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-2">
                 <a onClick={handleClick} aria-label={`Get random ${type}`} tabIndex={0} data-testid="card-link">
-                    <div className="card bg-neutral text-neutral-content w-96">
+                    <div className="card bg-neutral text-neutral-content w-80 h-36">
                         <div className="card-body items-center text-center">
                             <h2 className="card-title">{background ? background.title : '?'}</h2>
                             <p>{background ? background.description : '???'}</p>
@@ -68,13 +68,18 @@ const Card = ({ type }: CardProps) => {
                     </div>
                 </a>
                 <div className="card-buttons flex gap-2 justify-center">
-                    <button className={`btn pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
-                        {pinnedBackgrounds[type] ? "Unpin" : "Pin"}
-                    </button>
-                    <button disabled={!user} className="btn addBackground text-xs" onClick={handleAddBackground}>
-                        Add Background
-                    </button>
-                    <CollapsedOptions type={type} />
+                    <div className="flex gap-2 justify-center items-center">
+                        <button className={`btn btn-circle btn-sm pin text-xs ${pinnedBackgrounds[type] ? "bg-red-500" : ""}`} onClick={handlePin}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
+                        </button>
+
+                        <button disabled={!user} className="btn btn-circle btn-sm addBackground text-xs" onClick={handleAddBackground}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14m7-7H5" />
+                            </svg>
+                        </button>
+                        <CollapsedOptions type={type} />
+                    </div>
                 </div>
                 <div className="card-modal">
                     <AddBackgroundModal type={type} isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmitNewBackground} />

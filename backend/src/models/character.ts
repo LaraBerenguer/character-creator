@@ -104,15 +104,3 @@ Character.belongsTo(Background, { foreignKey: 'bond_id', as: 'bond' });
 Character.belongsTo(Background, { foreignKey: 'ideal_id', as: 'ideal' });
 
 export default Character;
-
-//PARA FETCH
-/*
-const character = await Character.findByPk(id, {
-  include: [
-    { model: Background, as: 'trait' },
-    { model: Background, as: 'flaw' },
-    { model: Background, as: 'bond' },
-    { model: Background, as: 'ideal' },
-    { model: User, as: 'user' }
-  ]
-}); */

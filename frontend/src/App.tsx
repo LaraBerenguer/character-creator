@@ -3,7 +3,10 @@ import RoutesComponent from './routes/routes';
 
 function App() {
   return (
-    <RoutesComponent />
+    //<div className="bg-container">
+      <RoutesComponent />
+    //</div>
+
   );
 };
 

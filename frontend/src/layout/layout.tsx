@@ -6,7 +6,7 @@ import Loading from "../components/Loading/Loading";
 
 const Layout = () => {
     return (
-        <div>
+        <div /*className="bg-container"*/>
             <div className="Navbar">
                 <Navbar />
             </div>

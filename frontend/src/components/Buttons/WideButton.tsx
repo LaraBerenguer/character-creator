@@ -5,7 +5,7 @@ interface WideButtonProps {
 
 const WideButton = ({ buttonText, onClick }: WideButtonProps) => {
     return (
-        <button className="btn btn-block" onClick={onClick}>{buttonText}</button>
+        <button className="btn btn-wide" onClick={onClick}>{buttonText}</button>
     );
 };
 

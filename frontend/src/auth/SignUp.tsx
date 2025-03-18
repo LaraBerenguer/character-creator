@@ -60,8 +60,8 @@ const SignUp = () => {
     };
 
     return (
-        <div className="signUp-page flex justify-center my-5 min-h-screen">
-            <div className="signUp-page-elements max-w-sm flex flex-col gap-4">
+        <div className="signUp-page flex justify-center h-full">
+            <div className="signUp-page-elements max-w-sm flex flex-col gap-4 translate-y-[50%]">
                 <div className="signUp-page-title prose text-start">
                     <h1 className="">Sign Up</h1>
                 </div>

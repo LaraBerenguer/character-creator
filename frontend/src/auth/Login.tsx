@@ -45,8 +45,8 @@ const Login = () => {
     };
 
     return (
-        <div className="login-page flex justify-center my-5 min-h-screen">
-            <div className="login-page-elements max-w-sm flex flex-col gap-4">
+        <div className="login-page flex justify-center h-full">
+            <div className="login-page-elements max-w-sm flex flex-col gap-4 translate-y-[61%]">
                 <div className="login-page-title prose text-start">
                     <h1 className="">Log In</h1>
                 </div>
