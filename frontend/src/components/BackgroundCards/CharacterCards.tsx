@@ -10,13 +10,15 @@ import { IBackground } from "../../../../common/types/background-interface";
 import { useEffect, useRef, useState } from "react";
 import DescriptionModal from "../Characters/DescriptionModal";
 
+type ToastType = 'error' | 'info' | 'success' | null;
+
 const CharacterCards = () => {
 
     const { getRandomAll, currentBackgrounds, clearBackgrounds } = useBackgroundContext();
     const { pendingCharacter, loading, setPendingCharacter, generateDescription, createCharacter } = useCharacterContext();
     const [description, setDescription] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [showToast, setShowToast] = useState<boolean>(false);
+    const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean; }>({ message: "", type: null, visible: false });
     const modalRef = useRef<HTMLDialogElement>(null);
     const navigate = useNavigate();
 
@@ -38,10 +40,9 @@ const CharacterCards = () => {
         const ideal = currentBackgrounds[IBackgroundType.IDEAL];
 
         if (!trait || !flaw || !bond || !ideal) {
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 3000);
+            showToast("Please select all traits before continuing", "error")
             return;
-        }
+        };
 
         const finalCharacter: ICharacter = {
             ...pendingCharacter,
@@ -82,11 +83,18 @@ const CharacterCards = () => {
         };
         modalRef.current?.close();
         setIsModalOpen(false);
+        showToast("Your description is saved!", "success");
     };
 
     const CancelDescription = () => {
         modalRef.current?.close();
         setIsModalOpen(false);
+        showToast("Your description has not been saved", "error");
+    };
+
+    const showToast = (message: string, type: ToastType) => {
+        setToast({ message, type, visible: true });
+        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
     };
 
     if (loading) { return <Loading /> };
@@ -101,16 +109,16 @@ const CharacterCards = () => {
                     <div className="flex justify-center"><Card type={IBackgroundType.IDEAL} /></div>
                 </div>
                 <div className="character-creation-buttons-container flex flex-col items-center gap-4 mt-10">
-                    <WideButton buttonText={"Interpret"} onClick={handleInterpret} />
                     <WideButton buttonText={"Randomize All"} onClick={handleRandomizeAll} />
+                    <WideButton buttonText={"Interpret"} onClick={handleInterpret} />
                     <WideButton buttonText={"Finish character"} onClick={handleFinishCharacter} />
                 </div>
             </div>
             <DescriptionModal modalRef={modalRef} description={description} AcceptDescription={AcceptDescription} CancelDescription={CancelDescription} />
-            {showToast && (
+            {toast.visible && (
                 <div className="toast toast-end">
-                    <div className="alert alert-error">
-                        <span>Please select all traits before continuing</span>
+                    <div className={`alert alert-${toast.type}`}>
+                        <span>{toast.message}</span>
                     </div>
                 </div>
             )}

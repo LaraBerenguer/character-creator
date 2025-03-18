@@ -5,6 +5,7 @@ import { IBackgroundType } from "../../../../common/types/background-type-interf
 import { IBackground } from "../../../../common/types/background-interface";
 import CollapsedOptions from "./CollapsedOptions";
 import AddBackgroundModal from "./AddBackgroundModal";
+import Icon from "./BackgroundIcons";
 
 interface CardProps {
     type: IBackgroundType;
@@ -56,7 +57,7 @@ const Card = ({ type }: CardProps) => {
     return (
         <div className="card-elements">
             <div className="card-title flex justify-center prose my-2">
-                <div className="font-light">{type.toUpperCase()}</div>
+                <Icon type={type}/><div className="font-light">{type.toUpperCase()}</div><Icon type={type}/>
             </div>
             <div className="flex flex-col gap-2">
                 <a onClick={handleClick} aria-label={`Get random ${type}`} tabIndex={0} data-testid="card-link">

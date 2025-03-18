@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { IBackground } from '../../../common/types/background-interface';
 import { IBackgroundType } from '../../../common/types/background-type-interface';
-import { getBackgroundsByType, addBackground, getBackgroundsById } from '../services/background-crud';
+import { getBackgroundsByType, addBackground, getBackgroundsById } from '../services/backgroundApi';
 import { useNavigate } from 'react-router-dom';
 
 interface BackgroundContextProps {

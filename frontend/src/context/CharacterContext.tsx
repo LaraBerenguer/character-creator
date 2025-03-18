@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo, useReducer } from 'react';
-import { getCharacters, getCharactersByUserId, addCharacter, deleteCharacter } from '../services/character-crud';
-import { generateCharacterDescription } from '../services/ai-integration';
+import { getCharacters, getCharactersByUserId, addCharacter, deleteCharacter } from '../services/characterApi';
+import { generateCharacterDescription } from '../services/aiIntegrationApi';
 import { ICharacter } from '../../../common/types/character-interface';
 import { IPendingCharacter } from "../../../common/types/pending-character-interface";
 import { useNavigate } from 'react-router-dom';
