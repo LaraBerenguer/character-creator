@@ -42,13 +42,14 @@ export const getCharactersByUserId = async (req: Request, res: Response) => {
             ],
         }) as unknown as ICharacter[];
         
-        if (characters && characters.length > 0) {
+        res.json(characters);
+        /*if (characters && characters.length > 0) {
             res.json(characters);
         } else {
             res.status(404).json({
                 msg: `No characters found for user ${userId}`
             });
-        }
+        }*/
     } catch (error) {
         console.error('Error fetching characters:', error);
         res.status(500).json({

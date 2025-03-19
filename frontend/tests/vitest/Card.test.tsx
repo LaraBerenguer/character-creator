@@ -179,7 +179,8 @@ describe('Card', () => {
             );
         });
 
-        const pinButton = screen.getByText('Pin');
+        const pinButton = screen.getByTestId('pin-button');
+        
         act(() => {
             fireEvent.click(pinButton);
         });
@@ -229,7 +230,7 @@ describe('Card', () => {
             );
         });
 
-        const addButton = screen.getByText('Add Background');
+        const addButton = screen.getByTestId('add-background-button');
 
         act(() => {
             fireEvent.click(addButton);
