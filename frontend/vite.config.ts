@@ -4,7 +4,10 @@ import { defineConfig as defineVitestConfig } from 'vitest/config'
 
 export default mergeConfig(
   defineConfig({
-    plugins: [react()]
+    plugins: [react()],
+    build: {
+      outDir: 'dist'
+    }
   }),
   defineVitestConfig({
     test: {
