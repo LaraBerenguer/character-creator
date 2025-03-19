@@ -1,4 +1,4 @@
-# React + Nodejs app to create your characters
+# React + Nodejs + postgresql web to create your characters
 
 ## 📄 Description
 
@@ -6,7 +6,7 @@ CHECK IT LIVE HERE: [https://character-creator-rho.vercel.app/](https://characte
 
 Greetings, adventurer! This is a full-stack web application for creating a character personality. You can choose or randomize four aspects of your personality: trait, bond, flaw and ideal. Also, if you need more inspiration, you can generate a small background to give life to your character.
 
-I built the app with React + Vite. Frontend includes .... Backend includes Nodejs, express and database management with Sequelize and Postgresql. Auth is done with bcrypt and JWT.
+I built the app with React + Vite. Frontend includes TypeScript, TailwindCSS and DaisyUI for styling, and PostCSS for processing CSS. Backend includes Node.js with Express for server-side logic and database management with Sequelize and PostgreSQL. Authentication is handled with bcrypt and JWT.
 
 ## 💻 Technologies Used
 
