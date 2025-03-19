@@ -8,7 +8,10 @@ WORKDIR /app
 COPY backend/package*.json ./backend/
 
 # Instala las dependencias
-RUN npm install --prefix backend
+RUN npm install --prefix backend --no-cache
+
+# Rebuild bcrypt for the correct architecture
+RUN npm rebuild bcrypt --prefix backend
 
 # Copia todo el proyecto al contenedor
 COPY . .
