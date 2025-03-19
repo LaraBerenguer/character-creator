@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Character from '../models/character';
 import Background from "../models/background";
-import { ICharacter } from "common/types/character-interface";
+import { ICharacter } from "../../../common/types/character-interface";
 
 export const getCharacters = async (req: Request, res: Response) => {
     const characters = await Character.findAll(); //add models later if used

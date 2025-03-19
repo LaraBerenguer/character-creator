@@ -3,10 +3,13 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
-
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -14,7 +17,6 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -22,5 +24,12 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "../common/types/bond-interface.ts", "../common/types/flaw-interface.ts", "../common/types/fullCharacter-Interface.ts", "../common/types/ideal-interface.ts", "../common/types/trait-interface.ts", "../common/types/background-interface.ts", "../common/types/background-type-interface.ts", "../common/types/character-interface.ts", "tests/vitest/Card.test.tsx"]
+  "include": [
+    "src",
+    "tests/vitest/Card.test.tsx",
+    "../common/types/background-interface.ts",
+    "../common/types/background-type-interface.ts",
+    "../common/types/character-interface.ts",
+    "../common/types/pending-character-interface.ts"
+  ]
 }
