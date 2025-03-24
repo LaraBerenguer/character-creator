@@ -24,11 +24,11 @@ I built the app with React + Vite. Frontend includes TypeScript, TailwindCSS and
 - CORS
 - Docker
 
-## Deployment
+### Deployment
 - Vercel
 - Render
 
-## Testing
+### Testing
 - Vitest
 - Playwright
 
@@ -125,7 +125,7 @@ Once the server is running, you'll see a URL similar to:
  > Local: http://localhost:5173/
 ```
 
-### Production
+## ✅ Production
 
 **✔️ Step 1:** Build the frontend:
 
@@ -139,7 +139,7 @@ Once the server is running, you'll see a URL similar to:
     npm start
  ```
 
-## Testing
+## 🧪 Testing
 
 - Run component tests:
  ```bash
