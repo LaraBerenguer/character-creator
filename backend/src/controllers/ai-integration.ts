@@ -8,7 +8,7 @@ const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
 export const generateCharacterDescription = async (req: Request, res: Response) => {
     const { trait, flaw, bond, ideal, name } = req.body;
     const maxTokens = 80;
-    const prompt = `Create a short and concise backstory for a Dungeons & Dragons character named ${name} with the following traits: trait: ${trait}, flaw: ${flaw}, bond: ${bond} and ideal: ${ideal}. The backstory should explain how these traits influence the character's personality and actions. The backstory MUST be no more than 50 words and should fit within ${maxTokens} tokens. It should be self-contained and not cut off mid-sentence.`;
+    const prompt = `Create a short and concise backstory for a Dungeons & Dragons character named ${name} with the following traits: trait: ${trait}, flaw: ${flaw}, bond: ${bond} and ideal: ${ideal}. The backstory should explain how these traits influence the character's personality and actions. The backstory MUST be no more than 50 words and should fit within ${maxTokens} tokens. It should be self-contained, not cut off mid-sentence, and formatted as plain text without bold, italics, or Markdown styling.`;
 
     try {
         const response = await fetch(DEEPSEEK_API_URL,

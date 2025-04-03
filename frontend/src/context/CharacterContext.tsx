@@ -10,19 +10,22 @@ interface State {
     characters: ICharacter[],
     pendingCharacters: IPendingCharacter | null,
     loading: boolean
+    loadingDescription: boolean
 };
 
 type Action =
     | { type: 'SET_CHARACTERS'; payload: ICharacter[] }
     | { type: 'SET_PENDING_CHARACTERS'; payload: IPendingCharacter | null }
     | { type: 'SET_LOADING'; payload: boolean }
+    | { type: 'SET_LOADING_DESCRIPTION'; payload: boolean }
     | { type: 'ADD_CHARACTER'; payload: ICharacter }
     | { type: 'REMOVE_CHARACTER'; payload: number }
 
 const initialState = {
     characters: [],
     pendingCharacters: null,
-    loading: false
+    loading: false,
+    loadingDescription: false
 };
 
 const reducer = (state: State, action: Action) => {
@@ -33,6 +36,8 @@ const reducer = (state: State, action: Action) => {
             return { ...state, pendingCharacters: action.payload };
         case "SET_LOADING":
             return { ...state, loading: action.payload };
+        case "SET_LOADING_DESCRIPTION":
+            return { ...state, loadingDescription: action.payload };
         case "ADD_CHARACTER":
             return { ...state, characters: [...state.characters, action.payload] };
         case "REMOVE_CHARACTER":
@@ -46,6 +51,7 @@ interface CharacterContextProps {
     characters: ICharacter[];
     pendingCharacter: IPendingCharacter | null;
     loading: boolean;
+    loadingDescription: boolean;
     getUserCharacters: () => Promise<ICharacter[]>;
     getAllCharacters: () => Promise<ICharacter[]>;
     createCharacter: (characterData: ICharacter) => void;
@@ -74,15 +80,15 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     //description
     const generateDescription = async (character: ICharacter) => {
         try {
-            dispatch({ type: "SET_LOADING", payload: true });
+            dispatch({ type: "SET_LOADING_DESCRIPTION", payload: true });
             const description = await generateCharacterDescription(character);
 
-            dispatch({ type: "SET_LOADING", payload: false });
+            dispatch({ type: "SET_LOADING_DESCRIPTION", payload: false });
             return description;
 
         } catch (error) {
             console.error('Error generating description', error);
-            dispatch({ type: "SET_LOADING", payload: false });
+            dispatch({ type: "SET_LOADING_DESCRIPTION", payload: false });
             navigate("/500");
             throw error;
         };
@@ -169,8 +175,9 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         generateDescription,
         characters: state.characters,
         loading: state.loading,
+        loadingDescription: state.loadingDescription,
         pendingCharacter: state.pendingCharacters
-    }), [state.characters, state.loading, state.pendingCharacters]);
+    }), [state.characters, state.loading, state.loadingDescription, state.pendingCharacters]);
 
     return (
         <CharacterContext.Provider value={value}>

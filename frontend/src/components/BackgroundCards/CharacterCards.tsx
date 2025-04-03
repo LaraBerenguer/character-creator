@@ -1,6 +1,7 @@
 import WideButton from "../../components/Buttons/WideButton";
 import Card from "../../components/BackgroundCards/Card";
 import Loading from "../../components/Loading/Loading";
+import LoadingDescription from "../Loading/LoadingDescription";
 import { useBackgroundContext } from "../../context/BackgroundContext";
 import { useCharacterContext } from "../../context/CharacterContext";
 import { IBackgroundType } from "../../../../common/types/background-type-interface";
@@ -15,7 +16,7 @@ type ToastType = 'error' | 'info' | 'success' | null;
 const CharacterCards = () => {
 
     const { getRandomAll, currentBackgrounds, clearBackgrounds } = useBackgroundContext();
-    const { pendingCharacter, loading, setPendingCharacter, generateDescription, createCharacter } = useCharacterContext();
+    const { pendingCharacter, loading, loadingDescription, setPendingCharacter, generateDescription, createCharacter } = useCharacterContext();
     const [description, setDescription] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean; }>({ message: "", type: null, visible: false });
@@ -23,10 +24,10 @@ const CharacterCards = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isModalOpen && !loading && modalRef.current) {
+        if (isModalOpen && !loading && !loadingDescription && modalRef.current) {
             modalRef.current.showModal();
         }
-    }, [isModalOpen, loading]);
+    }, [isModalOpen, loading, loadingDescription]);
 
 
     const handleRandomizeAll = () => {
@@ -98,6 +99,7 @@ const CharacterCards = () => {
     };
 
     if (loading) { return <Loading /> };
+    if (loadingDescription) { return <LoadingDescription /> };
 
     return (
         <>

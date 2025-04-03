@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 const Home = () => {
     const { user } = useAuth();
     return (
-        <div className="flex flex-col items-center h-full">
+        <div className="flex flex-col lg:flex-row lg:justify-around lg:mx-44 items-center h-full ">
             <section className="text-center prose mt-16 lg:mt-40 w-80 max-w-full">
                 <h1>Welcome to your story!</h1>
                 
@@ -18,7 +18,6 @@ const Home = () => {
                     <div><Link to="/name" className="no-underline hover:text-accent transition-all duration-400"><h2 className="text-[170%] mt-[9%] hover:text-accent">Create a new Character</h2></Link></div>
                 </div>
             </section>
-
         </div>
     )
 };
