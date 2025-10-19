@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const isDevelopment = process.env.ENVIRONMENT?.toLowerCase() === 'development';
+
 const sequelize = new Sequelize({
     database: process.env.DB_NAME || 'character_db',
     username: process.env.DB_USER || 'character_user',
@@ -10,7 +12,7 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST || 'localhost',
     port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
-    dialectOptions: {
+    dialectOptions: isDevelopment ? {} : {
         ssl: {
             require: true, 
             rejectUnauthorized: false 
@@ -23,8 +25,7 @@ export const connectDB = async () => {
     try {        
         await sequelize.authenticate();
         console.log('Connection to db has been established successfully.');
-        //DEVELOPMENT ONLY
-        const isDevelopment = process.env.ENVIRONMENT?.toLowerCase() === 'development';
+        //DEVELOPMENT ONLY        
         if (isDevelopment) {
             await sequelize.sync();
             console.log('Database synced');                        
