@@ -33,9 +33,9 @@ const RoutesComponent = () => {
                     <Route path="/signup" element={<LazyWrapper component={SignUp} />} />
                     <Route path='*' element={<LazyWrapper component={NotFoundPage} />} />
                     <Route path="/500" element={<LazyWrapper component={Error500} />} />
+                    <Route path="/creation" element={<LazyWrapper component={CharacterCreation} />} />
+                    <Route path="/name" element={<LazyWrapper component={CharacterName} />} />
                     <Route element={<ProtectedRoute />}>
-                        <Route path="/creation" element={<LazyWrapper component={CharacterCreation} />} />
-                        <Route path="/name" element={<LazyWrapper component={CharacterName} />} />
                         <Route path="/dashboard" element={<LazyWrapper component={UserDashboard} />} />
                         <Route path="/dashboard/character/:id" element={<LazyWrapper component={CharacterInfoPage} />} />
                     </Route>
