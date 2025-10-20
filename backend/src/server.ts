@@ -9,6 +9,7 @@ import registerRoutes from './routes/register';
 import usersRoutes from './routes/users';
 import characterRoutes from './routes/characters';
 import aiRoutes from './routes/ai-integrations';
+import localStorageRoutes from './routes/migration';
 
 class Server {
     private readonly app: express.Application;
@@ -49,12 +50,13 @@ class Server {
 
     routes() {
         this.app.use('/api/backgrounds', backgroundRoutes);
-        this.app.use('/api/public/backgrounds', publicBackgroundRoutes); //local
+        this.app.use('/api/public/backgrounds', publicBackgroundRoutes); //public
         this.app.use('/api/register', registerRoutes);
         this.app.use('/api/login', loginRoutes);
         this.app.use('/api', usersRoutes);
         this.app.use('/api/characters', characterRoutes);
         this.app.use('/api/ai', aiRoutes);
+        this.app.use('/api/local-storage', localStorageRoutes); //localstorage
 
         this.app.use((err: any, req: Request, res: Response, next: Function) => {
             console.error(err);
