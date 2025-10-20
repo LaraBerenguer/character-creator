@@ -4,6 +4,6 @@ import { authentication } from '../controllers/auth';
 
 const router = Router();
 
-router.post('/', authentication as RequestHandler, migrateLocalStorageCharacters as RequestHandler);
+router.post('/migrate', authentication as RequestHandler, migrateLocalStorageCharacters as RequestHandler);
 
 export default router;
