@@ -3,6 +3,7 @@ import { connectDB } from './database/connection';
 import seedDatabase from './database/seed/seed';
 import cors from 'cors';
 import backgroundRoutes from './routes/backgrounds';
+import publicBackgroundRoutes from './routes/public-backgrounds';
 import loginRoutes from './routes/login';
 import registerRoutes from './routes/register';
 import usersRoutes from './routes/users';
@@ -48,6 +49,7 @@ class Server {
 
     routes() {
         this.app.use('/api/backgrounds', backgroundRoutes);
+        this.app.use('/api/public/backgrounds', publicBackgroundRoutes); //local
         this.app.use('/api/register', registerRoutes);
         this.app.use('/api/login', loginRoutes);
         this.app.use('/api', usersRoutes);
