@@ -1,0 +1,102 @@
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getCharactersFromLocalStorage, deleteCharacterFromLocalStorage } from "../../services/localStorageService";
+import { ICharacter } from "../../../../common/types/character-interface";
+import Loading from "../Loading/Loading";
+import DeleteModal from "./DeleteModal";
+
+const PublicCharactersList: React.FC = () => {
+    const [characters, setCharacters] = useState<ICharacter[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [characterDeletingId, setCharacterDeletingId] = useState<number | null>(null);
+    const modalRef = useRef<HTMLDialogElement>(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const loadLocalCharacters = () => {
+            setLoading(true);
+            const localChars = getCharactersFromLocalStorage();
+            setCharacters(localChars);
+            setLoading(false);
+        };
+
+        loadLocalCharacters();
+    }, []);
+
+    const handleConfirmDelete = () => {
+        if (characterDeletingId) {
+            deleteCharacterFromLocalStorage(characterDeletingId);
+            setCharacters(prev => prev.filter(char => char.id !== characterDeletingId));
+            modalRef.current?.close();
+            setCharacterDeletingId(null);
+        }
+    };
+
+    const handleCancelDelete = () => {
+        modalRef.current?.close();
+        setCharacterDeletingId(null);
+    };
+
+    const handleDeleteClick = (characterId: number) => {
+        setCharacterDeletingId(characterId);
+        modalRef.current?.showModal();
+    };
+
+    const handleNavigateToInfo = (characterId: number) => {
+        navigate(`/dashboard/character/${characterId}`);
+    };
+
+
+    if (loading) return <Loading />;
+
+    return (
+        <>
+            <div className="public-dashboard-elements">
+                <div className="public-dashboard-button flex justify-start px-2 my-4">
+                    <button className="btn btn-circle" onClick={() => navigate("/")}>
+                        <svg className="h-6 w-6 fill-current md:h-8 md:w-8 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"></path></svg>
+                    </button>
+                </div>
+                <div className="public-dashboard-main flex flex-col justify-center items-center">
+                    <div className="local-info bg-primary/20 p-4 rounded-lg mb-4 text-center max-w-md w-full">
+                        <p>Hold, visitor! These are your temporary characters. <Link to="/signup" className="text-accent">Create an account</Link> to save them permanently!</p>
+                    </div>
+                    <ul className="list flex flex-col gap-5 max-w-md w-full">
+                        <li className="p-4 pb-2 text-lg tracking-wide opacity-60"><h1>Your characters</h1></li>
+                        {characters.map(character => (
+                            <li key={character.id} className="list-row bg-base-100 rounded-box shadow-md p-4 w-full">
+                                <div className="list-character-info flex flex-row items-center justify-between gap-7">
+                                    <div className="list-text text-start flex flex-col gap-5">
+                                        <div>
+                                            <div className="character-name text-xs uppercase font-semibold text-accent"><h2>{character.name}</h2></div>
+                                        </div>
+                                        <p className="character-description list-col-wrap text-xs line-clamp-2">
+                                            {character.description || `This is your character ${character.name}`}
+                                        </p>
+                                    </div>
+                                    <div className="lists-text-buttons flex">
+                                        <button className="btn btn-square btn-ghost" onClick={() => { handleNavigateToInfo(character.id!) }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        </button>
+                                        <button className="btn btn-square btn-ghost" onClick={() => { handleDeleteClick(character.id!) }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <DeleteModal modalRef={modalRef} handleConfirmDelete={handleConfirmDelete} handleCancelDelete={handleCancelDelete} />
+            </div>
+        </>
+
+    );
+};
+
+export default PublicCharactersList;
