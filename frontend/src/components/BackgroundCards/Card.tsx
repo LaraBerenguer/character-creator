@@ -47,6 +47,11 @@ const Card = ({ type }: CardProps) => {
     };
 
     const handleAddBackground = () => {
+        if (!user) {
+            //todo toast
+            alert('Please login to add custom backgrounds');
+            return;
+        }
         setIsModalOpen(true);
     };
 
@@ -57,7 +62,7 @@ const Card = ({ type }: CardProps) => {
     return (
         <div className="card-elements">
             <div className="card-title flex justify-center prose my-2">
-                <Icon type={type}/><div className="font-light">{type.toUpperCase()}</div><Icon type={type}/>
+                <Icon type={type} /><div className="font-light">{type.toUpperCase()}</div><Icon type={type} />
             </div>
             <div className="flex flex-col gap-2">
                 <a onClick={handleClick} aria-label={`Get random ${type}`} tabIndex={0} data-testid="card-link">
@@ -74,11 +79,14 @@ const Card = ({ type }: CardProps) => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
                         </button>
 
-                        <button disabled={!user} data-testid="add-background-button" className="btn btn-circle btn-sm addBackground text-xs" onClick={handleAddBackground}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14m7-7H5" />
-                            </svg>
-                        </button>
+                        <span title={user ? `Add custom ${type}` : `Login to add custom ${type}`}>
+                            <button disabled={!user} data-testid="add-background-button" className="btn btn-circle btn-sm addBackground text-xs" onClick={handleAddBackground}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14m7-7H5" />
+                                </svg>
+                            </button>
+                        </span>
+
                         <CollapsedOptions type={type} />
                     </div>
                 </div>
