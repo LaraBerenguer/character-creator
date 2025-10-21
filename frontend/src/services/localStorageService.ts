@@ -1,47 +1,41 @@
-import { ILocalCharacter } from '../../../common/types/local-character-interface';
+import { ICharacter } from '../../../common/types/character-interface';
 
 //get all
-export const getCharactersFromLocalStorage = async (): Promise<ILocalCharacter[]> => {
+export const getCharactersFromLocalStorage = (): ICharacter[] => {
     try {
         const localCharacters = localStorage.getItem("localStorageCharacters");
         if (!localCharacters) return [];
         const characters = JSON.parse(localCharacters);
-        return characters;
+        return Array.isArray(characters) ? characters : [];
 
     } catch (error) {
         console.error('Error fetching local characters', error);
-        throw error;
+        return []
     };
 };
 
 //post
-export const addCharacterToLocalStorage = async (characterData: ILocalCharacter): Promise<ILocalCharacter> => {
+export const addCharacterToLocalStorage = (characterData: ICharacter): void => {
 
-    const localCharacter = {
+    const localCharacter: ICharacter = {
         ...characterData,
-        id: new Date().getTime(),
-        trait_id: characterData.trait.id,
-        bond_id: characterData.bond.id,
-        flaw_id: characterData.flaw.id,
-        ideal_id: characterData.ideal.id
+        id: new Date().getTime()
     };
 
     try {
-        const currentCharacters = await getCharactersFromLocalStorage();
+        const currentCharacters = getCharactersFromLocalStorage();
         const updatedCharacters = [...currentCharacters, localCharacter];
-        localStorage.setItem("localStorageCharacters", JSON.stringify(updatedCharacters));
-        return localCharacter;
+        localStorage.setItem("localStorageCharacters", JSON.stringify(updatedCharacters));       
 
     } catch (error) {
         console.error('Error creating local character', error);
-        throw error;
     };
 };
 
 //delete
-export const deleteCharacterFromLocalStorage = async (id: number) => {
+export const deleteCharacterFromLocalStorage = (id: number) => {
     try {
-        const currentCharacters = await getCharactersFromLocalStorage();
+        const currentCharacters = getCharactersFromLocalStorage();
         const updatedCharacters = currentCharacters.filter(char => char.id !== id);
 
         if (updatedCharacters.length === currentCharacters.length) {
@@ -53,18 +47,16 @@ export const deleteCharacterFromLocalStorage = async (id: number) => {
 
     } catch (error) {
         console.error('Error deleting local characters:', error);
-        throw error;
     }
 };
 
 //clear
-export const clearLocalStorage = async () => {
+export const clearLocalStorage = () => {
     try {
-        localStorage.setItem("localStorageCharacters", JSON.stringify([]));
+        localStorage.removeItem("localStorageCharacters");
 
     } catch (error) {
         console.error('Error deleting local characters:', error);
-        throw error;
     }
 };
 
