@@ -2,7 +2,9 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { IBackground } from '../../../common/types/background-interface';
 import { IBackgroundType } from '../../../common/types/background-type-interface';
 import { getBackgroundsByType, addBackground, getBackgroundsById } from '../services/backgroundApi';
+import { getPublicBackgroundsByType } from '../services/publicApi.ts';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 interface BackgroundContextProps {
     getRandomBackground: (type: IBackgroundType) => Promise<IBackground>;
@@ -21,6 +23,7 @@ interface BackgroundContextProps {
 export const BackgroundContext = createContext<BackgroundContextProps | undefined>(undefined);
 
 export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const {user} = useAuth();
 
     const [currentBackgrounds, setCurrentBackgrounds] = useState<Record<IBackgroundType, IBackground | null>>({
         [IBackgroundType.TRAIT]: null,
@@ -38,9 +41,14 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const [refreshBackgrounds, setRefreshBackgrounds] = useState(0);
     const navigate = useNavigate();
 
+    //local or auth
+    const getBackgroundsService = (type: IBackgroundType) => {
+        return user ? getBackgroundsByType(type) : getPublicBackgroundsByType(type);
+    };
+
     const getRandomBackground = async (type: IBackgroundType): Promise<IBackground> => {
         try {
-            const filteredBackgrounds = await getBackgroundsByType(type);
+            const filteredBackgrounds = await getBackgroundsService(type);
             if (filteredBackgrounds === null || filteredBackgrounds.length === 0) {
                 throw new Error('Array should not be null');
             } else {
@@ -55,7 +63,7 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     const getByType = async (type: IBackgroundType): Promise<IBackground[]> => {
         try {
-            const backgroundsByType = await getBackgroundsByType(type);
+            const backgroundsByType = await getBackgroundsService(type);
             if (backgroundsByType === null) {
                 throw new Error('Array should not be null');
             } else {
@@ -70,9 +78,12 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     const getBackgroundById = async (id: number): Promise<IBackground> => {
         try {
+            if (!user) {
+                throw new Error('Authentication required for this operation');
+            }
             const backgroundsById = await getBackgroundsById(id);
             return backgroundsById;
-        } catch (error) {
+        } catch (error) {            
             console.error('Error fetching backgrounds', error);
             navigate("/500");
             throw error;
@@ -106,10 +117,19 @@ export const BackgroundProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     const addUserBackground = async (bgData: IBackground) => {
         try {
+            if (!user) {
+                //todo toast
+                throw new Error('Please login to add custom backgrounds');
+            }
             const addedBackground = await addBackground(bgData);
             console.log('Updated backgrounds:', addedBackground);
             setRefreshBackgrounds(prev => prev + 1);
         } catch (error) {
+            if (error instanceof Error && error.message.includes('login')) {
+                //todo toast
+                alert('Please login to add custom backgrounds');
+                return;
+            }
             console.error('Error fetching backgrounds', error);
             navigate("/500");
             throw error;

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { IBackground } from "../../../../common/types/background-interface";
 import { useEffect, useRef, useState } from "react";
 import DescriptionModal from "../Characters/DescriptionModal";
+import { useAuth } from "../../context/AuthContext";
 
 type ToastType = 'error' | 'info' | 'success' | null;
 
@@ -17,6 +18,7 @@ const CharacterCards = () => {
 
     const { getRandomAll, currentBackgrounds, clearBackgrounds } = useBackgroundContext();
     const { pendingCharacter, loading, loadingDescription, setPendingCharacter, generateDescription, createCharacter } = useCharacterContext();
+    const { user } = useAuth();
     const [description, setDescription] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean; }>({ message: "", type: null, visible: false });
@@ -61,13 +63,19 @@ const CharacterCards = () => {
         if (character) {
             createCharacter(character);
             clearBackgrounds();
-            navigate('/dashboard');
+            { user ? navigate('/dashboard') : navigate('/local-dashboard') }
         };
     };
 
     const handleInterpret = async () => {
         const character = buildFinalCharacter();
         if (character) {
+            if (!user) {
+                setIsModalOpen(false);
+                showToast("Please, Login to generate character descriptions", "error")
+                return;
+            }
+
             const characterDescription = await generateDescription(character);
             setDescription(characterDescription);
             setIsModalOpen(true);

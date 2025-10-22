@@ -10,6 +10,7 @@ const CharacterName = lazy(() => import('../pages/CharacterName'));
 const Login = lazy(() => import('../auth/Login'));
 const SignUp = lazy(() => import('../auth/SignUp'));
 const UserDashboard = lazy(() => import('../pages/UserDashboard'));
+const PublicDashboard = lazy(() => import('../pages/PublicDashboard'));
 const CharacterInfoPage = lazy(() => import('../pages/CharacterInfoPage'))
 const NotFoundPage = lazy(() => import('../pages/NotFound'));
 const Error500 = lazy(() => import('../pages/Error500'));
@@ -33,9 +34,10 @@ const RoutesComponent = () => {
                     <Route path="/signup" element={<LazyWrapper component={SignUp} />} />
                     <Route path='*' element={<LazyWrapper component={NotFoundPage} />} />
                     <Route path="/500" element={<LazyWrapper component={Error500} />} />
+                    <Route path="/creation" element={<LazyWrapper component={CharacterCreation} />} />
+                    <Route path="/name" element={<LazyWrapper component={CharacterName} />} />
+                    <Route path="/local-dashboard" element={<LazyWrapper component={PublicDashboard} />} />
                     <Route element={<ProtectedRoute />}>
-                        <Route path="/creation" element={<LazyWrapper component={CharacterCreation} />} />
-                        <Route path="/name" element={<LazyWrapper component={CharacterName} />} />
                         <Route path="/dashboard" element={<LazyWrapper component={UserDashboard} />} />
                         <Route path="/dashboard/character/:id" element={<LazyWrapper component={CharacterInfoPage} />} />
                     </Route>

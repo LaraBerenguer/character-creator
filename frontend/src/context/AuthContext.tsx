@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { getCharactersFromLocalStorage } from "../services/localStorageService";
+import { migrateCharactersToDatabase } from "../services/migrationApi";
 
 //validation form
 const tokenResponseSchema = z.object({
@@ -108,6 +110,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem('user', JSON.stringify(userData));
 
             setUser(userData);
+            
+            // Auto-migrate localStorage characters if any exist
+            try {
+                const localCharacters = getCharactersFromLocalStorage();
+                if (localCharacters.length > 0) {
+                    console.log(`Auto-migrating ${localCharacters.length} characters from localStorage...`);
+                    await migrateCharactersToDatabase(localCharacters);
+                    // Clear localStorage after successful migration
+                    localStorage.removeItem("localStorageCharacters");
+                    console.log('Characters migrated successfully');
+                }
+            } catch (migrationError) {
+                console.error('Auto-migration failed:', migrationError);
+                // Don't fail the login process if migration fails
+            }
+            
             navigate('/');
             setLoading(false);
             return;
