@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('should create a character with randomized traits but no description and delete the character in dashboard', async ({ page }) => {
+    const uniqueName = `Jay${Date.now()}`;
     await page.goto('https://character-creator-rho.vercel.app/');
     await page.getByRole('link', { name: 'Login' }).click();
     await expect(page.getByRole('button', { name: 'Log In' })).toBeVisible();
@@ -13,22 +14,24 @@ test('should create a character with randomized traits but no description and de
     await page.waitForURL('**/');
     await expect(page.getByRole('link', { name: 'Create a new Character' })).toBeVisible();
     await page.getByRole('link', { name: 'Create a new Character' }).click();
-    await page.getByRole('textbox', { name: 'Your name' }).fill('Jay');
+    await page.getByRole('textbox', { name: 'Your name' }).fill(uniqueName);
     await page.getByRole('button', { name: 'Accept' }).click();
-    await page.waitForLoadState('networkidle');   
+    await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Randomize All' }).click();
     await page.waitForTimeout(1000);
-    await page.waitForLoadState('networkidle');    
+    await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Finish character' }).click();
     await page.waitForTimeout(1000);
     await page.waitForLoadState('networkidle');
-    await page.waitForSelector("li:has-text('Jay')");
-    await expect(page.getByRole('listitem').filter({ hasText: 'Jay' })).toBeVisible();
-    await page.getByRole('list').getByRole('button').filter({ hasText: /^$/ }).click();
+    await page.waitForSelector(`li:has-text('${uniqueName}')`);
+    await expect(page.getByRole('listitem').filter({ hasText: uniqueName })).toBeVisible();
+    await page.getByRole('listitem').filter({ hasText: uniqueName }).locator('button').last().click();
     await page.getByRole('button', { name: 'Delete' }).click();
+    await expect(page.getByRole('listitem').filter({ hasText: uniqueName })).not.toBeVisible();
 });
 
 test('should create a character with randomized traits and a generated description and then delete the character in dashboard', async ({ page }) => {
+    const uniqueName = `Jay${Date.now()}`;
     await page.goto('https://character-creator-rho.vercel.app/');
     await page.getByRole('link', { name: 'Login' }).click();
     await expect(page.getByRole('button', { name: 'Log In' })).toBeVisible();
@@ -44,7 +47,7 @@ test('should create a character with randomized traits and a generated descripti
     await page.getByRole('textbox', { name: 'Your name' }).press('CapsLock');
     await page.getByRole('textbox', { name: 'Your name' }).fill('J');
     await page.getByRole('textbox', { name: 'Your name' }).press('CapsLock');
-    await page.getByRole('textbox', { name: 'Your name' }).fill('Jay');
+    await page.getByRole('textbox', { name: 'Your name' }).fill(uniqueName);
     await page.getByRole('button', { name: 'Accept' }).click();
     await page.getByRole('button', { name: 'Randomize All' }).click();
     await page.waitForTimeout(1000);
@@ -53,10 +56,11 @@ test('should create a character with randomized traits and a generated descripti
     await page.getByRole('button', { name: 'I like it' }).click();
     await page.waitForTimeout(1000);
     await page.getByRole('button', { name: 'Finish character' }).click();
-    await page.waitForSelector("li:has-text('Jay')");
-    await expect(page.getByRole('listitem').filter({ hasText: 'Jay' })).toBeVisible();
-    await page.getByRole('list').getByRole('button').filter({ hasText: /^$/ }).click();
+    await page.waitForSelector(`li:has-text('${uniqueName}')`);
+    await expect(page.getByRole('listitem').filter({ hasText: uniqueName })).toBeVisible();
+    await page.getByRole('listitem').filter({ hasText: uniqueName }).locator('button').last().click();
     await page.getByRole('button', { name: 'Delete' }).click();
+    await expect(page.getByRole('listitem').filter({ hasText: uniqueName })).not.toBeVisible();
 });
 
 test('should redirect to 404 when page doesnt exist', async ({ page }) => {
@@ -71,6 +75,7 @@ test('should redirect to login when trying to access creation without login', as
 
 test('should create a character by clicking each card and delete the character in dashboard', async ({ page }) => {
     test.setTimeout(60000);
+    const uniqueName = `Jay${Date.now()}`;
     await page.goto('https://character-creator-rho.vercel.app/');
     await page.getByRole('link', { name: 'Login' }).click();
     await expect(page.getByRole('button', { name: 'Log In' })).toBeVisible();
@@ -82,7 +87,7 @@ test('should create a character by clicking each card and delete the character i
     await page.waitForURL('**/');
     await expect(page.getByRole('link', { name: 'Create a new Character' })).toBeVisible();
     await page.getByRole('link', { name: 'Create a new Character' }).click();
-    await page.getByRole('textbox', { name: 'Your name' }).fill('Jay');
+    await page.getByRole('textbox', { name: 'Your name' }).fill(uniqueName);
     await page.getByRole('button', { name: 'Accept' }).click();
     await page.waitForSelector('[aria-label="Get random trait"]', { state: 'visible' });
     await page.getByLabel('Get random trait').click();
@@ -105,8 +110,10 @@ test('should create a character by clicking each card and delete the character i
     //await expect(page.locator('.ideal-card .card-content')).not.toHaveText('???');
     //await expect(page.locator('.ideal-card .card-content')).toBeVisible();
     await page.getByRole('button', { name: 'Finish character' }).click();
-    await page.getByRole('list').getByRole('button').filter({ hasText: /^$/ }).click();
+    await page.waitForSelector(`li:has-text('${uniqueName}')`);
+    await expect(page.getByRole('listitem').filter({ hasText: uniqueName })).toBeVisible();
+    await page.getByRole('listitem').filter({ hasText: uniqueName }).locator('button').last().click();
     await page.getByRole('button', { name: 'Delete' }).click();
-    await expect(page.getByRole('listitem').filter({ hasText: 'Jay' })).not.toBeVisible();
+    await expect(page.getByRole('listitem').filter({ hasText: uniqueName })).not.toBeVisible();
     await expect(page).toHaveURL(/\/dashboard/);
 });
